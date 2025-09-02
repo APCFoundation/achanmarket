@@ -1,6 +1,6 @@
 # Marketplace NFT
 ## Achan Market
-welcome to Acgan market
+welcome to Achan market
 ### Features
 Leaderboard
 
