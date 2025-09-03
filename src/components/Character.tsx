@@ -8,9 +8,9 @@ import { useMediaQuery } from "react-responsive";
 const images = ["/char7.png", "/char6.png", "/char5.png", "/char4.png"];
 const position = [
   "sm:-bottom-[40rem] -bottom-[30rem]",
-  "sm:-bottom-[10rem] sm:left-96 -bottom-[5rem]",
-  "sm:-bottom-[45rem] sm:left-80 -left-8 -bottom-[35rem]",
-  "sm:-bottom-[10rem] sm:left-64 -left-20 -bottom-[5rem]",
+  "sm:-bottom-[10rem] -bottom-[5rem]",
+  "sm:-bottom-[45rem]  -bottom-[35rem]",
+  "sm:-bottom-[10rem] -left-20 -bottom-[5rem]",
 ];
 
 const sizeImage = [
@@ -66,14 +66,16 @@ const Character = () => {
   }, []);
 
   return (
-    <Image
-      alt=""
-      ref={charRef}
-      src={images[imgIndex]}
-      width={400}
-      height={400}
-      className={`${position[imgIndex]} absolute  animation-character ${sizeImage[imgIndex]} select-none pointer-events-none`}
-    />
+    <div className={"size-[40rem]  absolute"}>
+      <Image
+        alt=""
+        ref={charRef}
+        src={images[imgIndex]}
+        width={400}
+        height={400}
+        className={`${position[imgIndex]} absolute ${sizeImage[imgIndex]} select-none pointer-events-none`}
+      />
+    </div>
   );
 };
 export default Character;

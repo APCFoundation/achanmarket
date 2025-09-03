@@ -266,6 +266,7 @@ export default function Home() {
       };
     }
   }, [isMenuClicked]);
+  const images = ["/char7.png", "/char6.png", "/char5.png", "/char4.png"];
   return (
     <div id="main" className="w-full h-[1000vh] font-inter ">
       <Menu isMenuClicked={isMenuClicked} />
@@ -278,6 +279,14 @@ export default function Home() {
         <HeaderText className="absolute font-press text-[3vw] xl:top-3 top-4 sm:translate-x-[-3rem]   xl:scale-100 lg:scale-90 scale-50  ravo " />
         <BackGround className="animation-behind animation absolute" />
         <Character />
+        {/* <div className={"size-[40rem] absolute"}>
+          <Image
+            alt="testing"
+            fill={true}
+            className="object-contain"
+            src={images[4]}
+          />
+        </div> */}
         <Circles />
 
         <div
@@ -477,7 +486,7 @@ const Section = (props: {
 const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
   useGSAP(() => {
     gsap.to(".navigation", {
-      x: isMenuClicked ? 0 : 500,
+      x: isMenuClicked ? 0 : "100%",
       ease: "power2.inOut",
       duration: 0.5,
     });
@@ -485,7 +494,7 @@ const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
     gsap.to(".green-line", {
       ease: "power2.inOut",
       duration: 0.5,
-      x: isMenuClicked ? -410 : 500,
+      x: isMenuClicked ? -590 : "100%",
     });
   }, [isMenuClicked]);
   return (
@@ -496,11 +505,13 @@ const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
           clipPath: "polygon(50% 0, 100% 0%, 100% 100%, 0 100%)",
           boxShadow: "0 0 32px 0 rgba(0,0,0,0.3)",
         }}
-        className={`green-line bg-lime-400 w-[3rem] translate-x-[500px] h-full fixed top-0 bottom-0 right-0 z-[99]`}
+        className={`green-line bg-lime-400 w-[3rem] h-full fixed top-0 bottom-0 ${
+          isMenuClicked ? "right-[0.5%]" : "right-0"
+        } z-[99]`}
       ></div>
       <div
         id="navigation"
-        className="navigation fixed top-0 bottom-0 right-0 translate-x-[500px] w-1/3 h-full z-[99] pointer-events-auto flex  justify-center"
+        className="navigation fixed top-0 bottom-0 right-0 translate-x-[100%] w-1/3 h-full z-[99] pointer-events-auto flex  justify-center"
         style={{
           background: "black",
           // Sisi kiri miring: kiri atas turun sedikit, kiri bawah naik sedikit
