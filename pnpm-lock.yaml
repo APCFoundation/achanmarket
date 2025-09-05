@@ -50,6 +50,9 @@ dependencies:
   react:
     specifier: ^18
     version: 18.3.1
+  react-chatbot-kit:
+    specifier: ^2.2.2
+    version: 2.2.2
   react-dom:
     specifier: ^18
     version: 18.3.1(react@18.3.1)
@@ -6356,6 +6359,16 @@ packages:
 
   /radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
+    dev: false
+
+  /react-chatbot-kit@2.2.2:
+    resolution: {integrity: sha512-8p/i0KkzkhoyG2XsL6Pb6f72k9j7GYNAc5SOa4f9OZwbCD3Q34uEruNPc06qa1wZHKfT6aFna19PA2plFuO2NA==}
+    dependencies:
+      react-conditionally-render: 1.0.2
+    dev: false
+
+  /react-conditionally-render@1.0.2:
+    resolution: {integrity: sha512-CtjIgaLHVDSgHis3gv/PT/8EnD6GPUL8PrhUjh7DP6S5Y3p56dGu7y2nVg6pYv1kv+fGznRhRmX3assr/vRw3A==}
     dev: false
 
   /react-dom@18.3.1(react@18.3.1):
