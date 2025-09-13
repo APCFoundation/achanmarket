@@ -16,7 +16,7 @@ import Circles from "@/components/Circles";
 import Backed from "@/components/secondpage/backed";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import "./landingPage.css";
+import Chatbot from "@/components/chatbot/Chatbot";
 
 const Character = dynamic(() => import("@/components/Character"), {
   ssr: false,
@@ -269,7 +269,11 @@ export default function Home() {
   const images = ["/char7.png", "/char6.png", "/char5.png", "/char4.png"];
   return (
     <div id="main" className="w-full h-[1000vh] font-inter ">
+      {/* menu */}
       <Menu isMenuClicked={isMenuClicked} />
+      {/* Chatbot */}
+      <Chatbot />
+      {/* Page 1 */}
       <main
         id="section-1"
         className=" relative bg-white w-full h-screen flex flex-col items-center justify-center m-auto    max-w-screen-2xl   overflow-hidden z-[90] "
@@ -279,14 +283,14 @@ export default function Home() {
         <HeaderText className="absolute font-press text-[3vw] xl:top-3 top-4 sm:translate-x-[-3rem]   xl:scale-100 lg:scale-90 scale-50  ravo " />
         <BackGround className="animation-behind animation absolute" />
         {/* <Character /> */}
-        <div className={"size-[40rem] absolute"}>
+        {/* <div className={"size-[40rem] absolute"}>
           <Image
             alt="testing"
             fill={true}
             className="object-contain"
             src={images[0]}
           />
-        </div>
+        </div> */}
         <Circles />
 
         <div
@@ -327,6 +331,7 @@ export default function Home() {
         <DiscoverButton />
         <Navigation />
       </main>
+      {/* page 2 */}
       <Section
         id={"section-2"}
         className="w-full bg-black relative z-[90] text-white   overflow-hidden"
@@ -446,7 +451,7 @@ export default function Home() {
           </div>
         </div>
       </Section>
-
+      {/* features */}
       <Section id="features" className="w-full h-screen   relative z-[90]">
         <header
           ref={headerRef}

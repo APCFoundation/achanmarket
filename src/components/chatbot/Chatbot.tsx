@@ -1,0 +1,196 @@
+"use client";
+import { cn } from "@/lib/utils";
+import React, { useEffect, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { Input } from "../ui/input";
+
+const Chatbot = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useGSAP(() => {
+    const tl = gsap.timeline();
+
+    if (isOpen) {
+      tl.to("#chatbot", {
+        duration: 0.1,
+        width: "20rem",
+        padding: "1rem",
+        borderRadius: "1rem",
+      });
+      tl.to("#chatbot", {
+        duration: 0.1,
+        height: "30rem",
+        padding: "1rem 0",
+        borderRadius: "1rem",
+      });
+    } else {
+      tl.to("#chatbot", {
+        duration: 0.1,
+        height: "3rem",
+      });
+      tl.to("#chatbot", {
+        duration: 0.1,
+        width: "3rem",
+        padding: "0",
+        borderRadius: "50%",
+      });
+    }
+  }, [isOpen]);
+  return (
+    <div
+      id="chatbot"
+      className={cn(
+        `bg-black text-white border border-white fixed bottom-10 right-10 z-[99]  
+     transition-all duration-700  overflow-hidden `,
+        isOpen ? "" : "cursor-pointer flex items-center justify-center"
+      )}
+    >
+      <div
+        className={cn(
+          isOpen ? "flex flex-col gap-3  pb-2 pt-1 overflow-hidden" : "hidden"
+        )}
+      >
+        <div className={"px-5"}>
+          <CloseButton
+            isOpen={isOpen}
+            onClick={() => setIsOpen((open) => !open)}
+          />
+          <Header />
+        </div>
+        <Container />
+      </div>
+      <span
+        onClick={() => setIsOpen(true)}
+        className={cn(
+          "transition-opacity duration-500 w-full h-full justify-center items-center flex select-none cursor-pointer  ",
+          isOpen ? " opacity-0 hidden" : "opacity-100"
+        )}
+      >
+        {"?"}
+      </span>
+    </div>
+  );
+};
+
+const Header = () => {
+  return <div className={"font-press text-white"}>Chatbot</div>;
+};
+
+const Container = () => {
+  /**
+   * Alur chatbot
+   * 1. user memasukkan pertanyaan
+   * - usestate input
+   * -
+   * 2. bot menjawab
+   */
+  const [userInput, setUserInput] = useState();
+  const [messages, setMessages] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const newMessages = [...messages, { role: "user", content: userInput }];
+      const req = await fetch("/api/chatbot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newMessages),
+      });
+
+      const request = await req.json();
+      setMessages(request.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // get Data
+  useEffect(() => {
+    const getFirstChat = async () => {
+      const req = await fetch("/api/chatbot");
+      const request = await req.json();
+      setMessages(request.messages);
+    };
+    getFirstChat();
+  });
+
+  useEffect(() => {}, [data]);
+  return (
+    <div
+      className={
+        "w-full h-[26rem] px-3 chatbot-scroll-ui overflow-y-scroll   relative"
+      }
+    >
+      {/* isinya */}
+      <div className="pb-10 py-3 flex flex-col gap-3">
+        {/* chat bot nya */}
+        {/*  
+        alur UI
+        Color:
+        1. jika role / yang chat bot maka css nya kasih bg-gray-500
+        2. jika role / yang user maka css nya kasih bg-blue-500
+        Posisi:
+        1. jika role / yang chat bot maka css nya kasih self-start
+        2. jika role / yang user maka css nya kasih self-end
+        segitiga bawah:
+        1. jika role / yang chat bot maka css nya kasih -bottom-4  -left-1
+        2. jika role / yang user maka css nya kasih -bottom-4  -right-1 -scale-x-100
+        */}
+        <div
+          id="bot"
+          className="w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
+        >
+          <div
+            style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+            className="size-5   bg-gray-500 absolute -bottom-4  -left-1"
+          ></div>
+          Hi there! How can I help you? Lorem ipsum dolor sit amet consectetur
+          Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Laboriosam, quibusdam!
+        </div>
+
+        {/* chat user */}
+        <div
+          id="user"
+          className="w-fit bg-blue-500 rounded-md px-4 py-1 self-end text-white relative"
+        >
+          <div
+            style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+            className="size-5   bg-blue-500 absolute -bottom-4  -right-1 -scale-x-100"
+          ></div>
+          Hi there!
+        </div>
+        <div className="w-20 h-[50rem] bg-pink-500"></div>
+      </div>
+      {/* inputnya */}
+      <div className="w-full sticky bottom-0  ">
+        <Input className="w-full rounded-full bg-gray-600 text-white" />
+      </div>
+    </div>
+  );
+};
+
+const CloseButton = (props: { onClick: () => void; isOpen: boolean }) => {
+  const { onClick, isOpen } = props;
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation(); // cegah klik tembus parent
+        onClick();
+      }}
+      className={cn(
+        "transition-opacity duration-500 font-press text-red-600 select-none cursor-pointer absolute top-5 right-5 z-[99]",
+        isOpen ? " opacity-100" : "opacity-0"
+      )}
+    >
+      {"X"}
+    </div>
+  );
+};
+export default Chatbot;
