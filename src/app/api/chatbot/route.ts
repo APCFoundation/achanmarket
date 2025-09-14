@@ -4,16 +4,17 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function GET() {
   const chatCompletion = await getGroqChatCompletion();
-
-  console.log(chatCompletion.choices[0]?.message.content || "");
+  const messages = [];
+  messages.push(chatCompletion.choices[0]?.message);
   return NextResponse.json({
-    data: chatCompletion.choices,
+    messages: messages,
   });
 }
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
+  console.log(messages);
   const chatCompletion = await groqChat(messages);
   // Print the completion returned by the LLM.
   console.log(chatCompletion);
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
 
 function groqChat(messages: any) {
   return groq.chat.completions.create({
-    messages,
+    messages: messages,
     model: "openai/gpt-oss-20b",
   });
 }

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Input } from "../ui/input";
+import { SendIcon } from "lucide-react";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -48,7 +49,9 @@ const Chatbot = () => {
     >
       <div
         className={cn(
-          isOpen ? "flex flex-col gap-3  pb-2 pt-1 overflow-hidden" : "hidden"
+          isOpen
+            ? "w-full flex flex-col gap-3  pb-2 pt-1 overflow-hidden"
+            : "hidden"
         )}
       >
         <div className={"px-5"}>
@@ -77,6 +80,7 @@ const Header = () => {
   return <div className={"font-press text-white"}>Chatbot</div>;
 };
 
+type MessagesContent = { role: string; content: string };
 const Container = () => {
   /**
    * Alur chatbot
@@ -85,8 +89,8 @@ const Container = () => {
    * -
    * 2. bot menjawab
    */
-  const [userInput, setUserInput] = useState();
-  const [messages, setMessages] = useState([]);
+  const [userInput, setUserInput] = useState<string>("");
+  const [messages, setMessages] = useState<MessagesContent[]>([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -99,10 +103,11 @@ const Container = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newMessages),
+        body: JSON.stringify({ messages: newMessages }),
       });
 
       const request = await req.json();
+      console.log(request);
       setMessages(request.data);
     } catch (error) {
       console.log(error);
@@ -118,60 +123,60 @@ const Container = () => {
       setMessages(request.messages);
     };
     getFirstChat();
-  });
+  }, []);
 
   useEffect(() => {}, [data]);
   return (
     <div
       className={
-        "w-full h-[26rem] px-3 chatbot-scroll-ui overflow-y-scroll   relative"
+        "w-full h-[26rem] px-3 chatbot-scroll-ui overflow-y-scroll  relative"
       }
     >
       {/* isinya */}
-      <div className="pb-10 py-3 flex flex-col gap-3">
-        {/* chat bot nya */}
-        {/*  
-        alur UI
-        Color:
-        1. jika role / yang chat bot maka css nya kasih bg-gray-500
-        2. jika role / yang user maka css nya kasih bg-blue-500
-        Posisi:
-        1. jika role / yang chat bot maka css nya kasih self-start
-        2. jika role / yang user maka css nya kasih self-end
-        segitiga bawah:
-        1. jika role / yang chat bot maka css nya kasih -bottom-4  -left-1
-        2. jika role / yang user maka css nya kasih -bottom-4  -right-1 -scale-x-100
-        */}
-        <div
-          id="bot"
-          className="w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
-        >
-          <div
-            style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
-            className="size-5   bg-gray-500 absolute -bottom-4  -left-1"
-          ></div>
-          Hi there! How can I help you? Lorem ipsum dolor sit amet consectetur
-          Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Laboriosam, quibusdam!
-        </div>
+      {messages &&
+        messages.map((item, index) => (
+          <div className="pb-10 py-3 flex flex-col gap-3" key={index}>
+            <div
+              className={cn(
+                item.role === "user" ? "self-end" : "self-start",
+                "w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
+              )}
+            >
+              <div
+                style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+                className={cn(
+                  item.role === "user"
+                    ? "size-5   bg-gray-500 absolute -bottom-4  -right-1 -scale-x-100"
+                    : "size-5   bg-gray-500 absolute -bottom-4  -left-1"
+                )}
+              ></div>
+              {item.content}
+            </div>
+          </div>
+        ))}
 
-        {/* chat user */}
-        <div
-          id="user"
-          className="w-fit bg-blue-500 rounded-md px-4 py-1 self-end text-white relative"
-        >
-          <div
-            style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
-            className="size-5   bg-blue-500 absolute -bottom-4  -right-1 -scale-x-100"
-          ></div>
-          Hi there!
-        </div>
-        <div className="w-20 h-[50rem] bg-pink-500"></div>
-      </div>
       {/* inputnya */}
-      <div className="w-full sticky bottom-0  ">
-        <Input className="w-full rounded-full bg-gray-600 text-white" />
-      </div>
+      <form className="w-[calc(100%-1rem)] flex bg-gray-600 rounded-full px-3 absolute bottom-3  ">
+        <Input
+          value={userInput}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setUserInput(e.target.value)
+          }
+          className="w-full border-0 bg-transparent text-white 
+             focus:outline-0 focus:ring-0 focus:border-0 focus:shadow-none"
+        />
+
+        <button
+          type="submit"
+          className={"rounded-full "}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <SendIcon />
+        </button>
+      </form>
     </div>
   );
 };
@@ -194,3 +199,45 @@ const CloseButton = (props: { onClick: () => void; isOpen: boolean }) => {
   );
 };
 export default Chatbot;
+
+const IsiChatSimpenSementara = () => (
+  <div className="pb-10 py-3 flex flex-col gap-3">
+    {/* chat bot nya */}
+    {/*  
+        alur UI
+        Color:
+        1. jika role / yang chat bot maka css nya kasih bg-gray-500
+        2. jika role / yang user maka css nya kasih bg-blue-500
+        Posisi:
+        1. jika role / yang chat bot maka css nya kasih self-start
+        2. jika role / yang user maka css nya kasih self-end
+        segitiga bawah:
+        1. jika role / yang chat bot maka css nya kasih -bottom-4  -left-1
+        2. jika role / yang user maka css nya kasih -bottom-4  -right-1 -scale-x-100
+        */}
+
+    <div
+      id="bot"
+      className="w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
+    >
+      <div
+        style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+        className="size-5   bg-gray-500 absolute -bottom-4  -left-1"
+      ></div>
+      Hi there! How can I help you? Lorem ipsum dolor sit amet consectetur Lorem
+      ipsum dolor sit amet. Lorem ipsum dolor sit amet consectetur adipisicing
+      elit. Laboriosam, quibusdam!
+    </div>
+    <div
+      id="user"
+      className="w-fit bg-blue-500 rounded-md px-4 py-1 self-end text-white relative"
+    >
+      <div
+        style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+        className="size-5   bg-blue-500 absolute -bottom-4  -right-1 -scale-x-100"
+      ></div>
+      Hi there!
+    </div>
+    <div className="w-20 h-[50rem] bg-pink-500"></div>
+  </div>
+);
