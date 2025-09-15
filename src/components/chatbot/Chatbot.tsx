@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Input } from "../ui/input";
-import { SendIcon } from "lucide-react";
+import { LoaderCircle, SendIcon } from "lucide-react";
+import { Square } from "ldrs/react";
+import "ldrs/react/Square.css";
+import { Tailspin } from "ldrs/react";
+import "ldrs/react/Tailspin.css";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -50,7 +54,7 @@ const Chatbot = () => {
       <div
         className={cn(
           isOpen
-            ? "w-full flex flex-col gap-3  pb-2 pt-1 overflow-hidden"
+            ? "w-full flex flex-col gap-1 items-center  pb-2 pt-1 overflow-hidden"
             : "hidden"
         )}
       >
@@ -98,23 +102,52 @@ const Container = () => {
     setLoading(true);
     try {
       const newMessages = [...messages, { role: "user", content: userInput }];
+      setMessages(newMessages);
       const req = await fetch("/api/chatbot", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),
       });
-
       const request = await req.json();
       console.log(request);
-      setMessages(request.data);
+      setMessages((messages) => [
+        ...messages,
+        { role: "assistant", content: request.message },
+      ]);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+      setUserInput("");
     }
   };
+
+  // const typeEffect = (text: string) => {
+  //   let index = 0;
+  //   let currentText = "";
+
+  //   // Tambahin placeholder message dulu
+  //   setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+  //   const interval = setInterval(() => {
+  //     currentText += text[index];
+  //     index++;
+
+  //     setMessages((prev) => {
+  //       const updated = [...prev];
+  //       updated[updated.length - 1] = {
+  //         role: "assistant",
+  //         content: currentText,
+  //       }; // update terakhir
+  //       return updated;
+  //     });
+
+  //     if (index >= text.length) {
+  //       clearInterval(interval);
+  //     }
+  //   }, 40);
+  // };
+
   // get Data
   useEffect(() => {
     const getFirstChat = async () => {
@@ -125,38 +158,44 @@ const Container = () => {
     getFirstChat();
   }, []);
 
-  useEffect(() => {}, [data]);
+  // useEffect(() => {
+  //   if (messages[messages.length - 1]?.role == "assistant") {
+  //     typeEffect(messages[messages.length - 1]?.content);
+  //   }
+  // }, [messages]);
   return (
-    <div
-      className={
-        "w-full h-[26rem] px-3 chatbot-scroll-ui overflow-y-scroll  relative"
-      }
-    >
-      {/* isinya */}
-      {messages &&
-        messages.map((item, index) => (
-          <div className="pb-10 py-3 flex flex-col gap-3" key={index}>
-            <div
-              className={cn(
-                item.role === "user" ? "self-end" : "self-start",
-                "w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
-              )}
-            >
+    <>
+      <div
+        className={
+          "w-full h-[24rem] px-3 chatbot-scroll-ui overflow-y-scroll relative"
+        }
+      >
+        {/* isinya */}
+        {messages &&
+          messages.map((item, index) => (
+            <div className="pb-3 py-3 flex flex-col gap-1" key={index}>
               <div
-                style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
                 className={cn(
-                  item.role === "user"
-                    ? "size-5   bg-gray-500 absolute -bottom-4  -right-1 -scale-x-100"
-                    : "size-5   bg-gray-500 absolute -bottom-4  -left-1"
+                  item.role === "user" ? "self-end" : "self-start",
+                  "w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
                 )}
-              ></div>
-              {item.content}
+              >
+                <div
+                  style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
+                  className={cn(
+                    item.role === "user"
+                      ? "size-5   bg-gray-500 absolute -bottom-4  -right-1 -scale-x-100"
+                      : "size-5   bg-gray-500 absolute -bottom-4  -left-1"
+                  )}
+                ></div>
+                {item.content}
+              </div>
             </div>
-          </div>
-        ))}
-
+          ))}
+        {loading && <Tailspin size="30" stroke="5" speed="0.9" color="white" />}
+      </div>
       {/* inputnya */}
-      <form className="w-[calc(100%-1rem)] flex bg-gray-600 rounded-full px-3 absolute bottom-3  ">
+      <form className="w-[calc(100%-1rem)] flex bg-gray-600 rounded-full px-3   ">
         <Input
           value={userInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -168,16 +207,28 @@ const Container = () => {
 
         <button
           type="submit"
+          disabled={loading}
           className={"rounded-full "}
           onClick={(e) => {
             e.preventDefault();
             handleSubmit();
           }}
         >
-          <SendIcon />
+          {loading ? (
+            <Square
+              size="20"
+              stroke="5"
+              strokeLength="0.25"
+              bgOpacity="0.1"
+              speed="1.2"
+              color="white"
+            />
+          ) : (
+            <SendIcon />
+          )}
         </button>
       </form>
-    </div>
+    </>
   );
 };
 

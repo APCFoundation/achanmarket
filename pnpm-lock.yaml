@@ -41,6 +41,9 @@ dependencies:
   gsap:
     specifier: ^3.13.0
     version: 3.13.0
+  ldrs:
+    specifier: ^1.1.7
+    version: 1.1.7
   lucide-react:
     specifier: ^0.525.0
     version: 0.525.0(react@18.3.1)
@@ -71,6 +74,9 @@ dependencies:
   tailwindcss-animate:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.17)
+  typed.js:
+    specifier: ^2.1.0
+    version: 2.1.0
   viem:
     specifier: ^2.37.5
     version: 2.37.5(typescript@5.9.2)(zod@3.22.4)
@@ -5746,6 +5752,10 @@ packages:
       language-subtag-registry: 0.3.23
     dev: true
 
+  /ldrs@1.1.7:
+    resolution: {integrity: sha512-rZnfveeY1SeS3F3ifUVd9AVGTFHmQ0qzp5fuszAirnrVkjqJBLrm99vtr/Mxbby4XgadUYv+DsFqyk2p4FV40Q==}
+    dev: false
+
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -7553,6 +7563,10 @@ packages:
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
     dev: true
+
+  /typed.js@2.1.0:
+    resolution: {integrity: sha512-bDuXEf7YcaKN4g08NMTUM6G90XU25CK3bh6U0THC/Mod/QPKlEt9g/EjvbYB8x2Qwr2p6J6I3NrsoYaVnY6wsQ==}
+    dev: false
 
   /typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
