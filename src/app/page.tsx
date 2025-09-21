@@ -13,10 +13,11 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import MainInventory from "@/components/Inventory/MainInventory";
 import Badge from "@/components/Badge";
 import Circles from "@/components/Circles";
-import Backed from "@/components/secondpage/backed";
+import Backed from "@/components/landingPage/secondpage/backed";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Chatbot from "@/components/chatbot/Chatbot";
+import Menu from "@/components/landingPage/Menu";
 
 const Character = dynamic(() => import("@/components/Character"), {
   ssr: false,
@@ -347,16 +348,13 @@ export default function Home() {
               <div className="w-full relative flex items-stretch justify-between flex-row ">
                 <div className="w-1 h-[92%]  bg-white rounded-full" />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
-                  Anime UI is web for trade NFT
+                  Achan Market is marketplace for trade NFT
                 </h1>
               </div>
               <div className="w-full flex flex-row justify-between items-stretch text-[1vw]  font-semibold  text-balance">
                 <div className="w-1 h-[92%] mt-[0.5vw]  bg-transparent rounded-full" />
                 <div className="w-[89%] text-[3.5vw] sm:text-[2vw] md:text-[1vw]   sm:pr-[3vw] ">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-                  adipisci id facere dicta culpa asperiores natus non nihil
-                  saepe quasi itaque officiis sunt cupiditate quam reiciendis
-                  similique, dolores aspernatur voluptas?
+                  You can trade nft in any chain and any collection.
                 </div>
               </div>
             </section>
@@ -364,7 +362,7 @@ export default function Home() {
               <div className="size-[80vw] sm:size-[42vw] md:size-[35vw] flex  flex-none  rounded-full bg-white overflow-hidden relative">
                 <div className="size-full flex justify-center items-center absolute inset-0">
                   <Image
-                    src={"/overview/0.png"}
+                    src={"/overview/cintaku.png"}
                     width={240}
                     height={240}
                     alt="shoes"
@@ -398,16 +396,16 @@ export default function Home() {
               <div className="w-full relative flex items-stretch justify-between flex-row ">
                 <div className="w-1 h-[92%]  bg-white rounded-full" />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
-                  Anime UI is web for trade NFT
+                  Multi-Chain Trading, One Payment
                 </h1>
               </div>
               <div className="w-full flex flex-row justify-between items-stretch text-[1vw]  font-semibold  text-balance">
                 <div className="w-1 h-[92%] mt-[0.5vw]  bg-transparent rounded-full" />
                 <div className="w-[89%] text-[3.5vw] sm:text-[2vw] md:text-[1vw]   sm:pr-[3vw] ">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-                  adipisci id facere dicta culpa asperiores natus non nihil
-                  saepe quasi itaque officiis sunt cupiditate quam reiciendis
-                  similique, dolores aspernatur voluptas?
+                  No need to switch networks. Just pay with the chain you
+                  already use, and we’ll handle the bridging and transactions
+                  behind the scenes. Buying NFTs or tokens across chains is now
+                  as simple as one click.
                 </div>
               </div>
             </section>
@@ -484,66 +482,6 @@ const Section = (props: {
   return (
     <div id={id} className={className}>
       {children}
-    </div>
-  );
-};
-
-const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
-  useGSAP(() => {
-    gsap.to(".navigation", {
-      x: isMenuClicked ? 0 : "100%",
-      ease: "power2.inOut",
-      duration: 0.5,
-    });
-
-    gsap.to(".green-line", {
-      ease: "power2.inOut",
-      duration: 0.5,
-      x: isMenuClicked ? -590 : "100%",
-    });
-  }, [isMenuClicked]);
-  return (
-    <div>
-      <div
-        style={{
-          // Sisi kiri miring: kiri atas turun sedikit, kiri bawah naik sedikit
-          clipPath: "polygon(50% 0, 100% 0%, 100% 100%, 0 100%)",
-          boxShadow: "0 0 32px 0 rgba(0,0,0,0.3)",
-        }}
-        className={`green-line bg-lime-400 w-[3rem] h-full fixed top-0 bottom-0 ${
-          isMenuClicked ? "right-[0.5%]" : "right-0"
-        } z-[99]`}
-      ></div>
-      <div
-        id="navigation"
-        className="navigation fixed top-0 bottom-0 right-0 translate-x-[100%] w-1/3 h-full z-[99] pointer-events-auto flex  justify-center"
-        style={{
-          background: "black",
-          // Sisi kiri miring: kiri atas turun sedikit, kiri bawah naik sedikit
-          clipPath: "polygon(5% 0, 100% 0%, 100% 100%, 0 100%)",
-          boxShadow: "0 0 32px 0 rgba(0,0,0,0.3)",
-        }}
-      >
-        <div className="flex w-full justify-center items-center flex-col gap-3 mt-32 h-fit">
-          {Array(4)
-            .fill(0)
-            .map((_, index) => {
-              let menuText = ["Launch App", "Docs", "Contact", "Roadmap"];
-              let url = ["/dashboard", "/docs", "/contact", "/roadmap"];
-              return (
-                <Link
-                  href={`${url[index].toLowerCase()}`}
-                  className={
-                    "text-[1.8rem] font-bold text-gray-500 hover:text-gray-400 cursor-pointer"
-                  }
-                  key={index}
-                >
-                  {menuText[index]}
-                </Link>
-              );
-            })}
-        </div>
-      </div>
     </div>
   );
 };

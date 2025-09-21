@@ -13,7 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Upload, X, Check } from "lucide-react";
-
+import Navbar from "@/components/Navbar";
+import { useAccount } from "wagmi";
 export default function Component() {
   const [selectedChain, setSelectedChain] = useState("base");
   const [name, setName] = useState("The Pond");
@@ -73,8 +74,9 @@ export default function Component() {
   };
 
   return (
-    <div>
-      <div className="min-h-screen bg-white p-6">
+    <div className={""}>
+      <Navbar />
+      <div className="min-h-screen bg-white p-6 font-press">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex justify-end mb-8">
