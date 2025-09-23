@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,21 @@ import {
 } from "@/components/ui/select";
 import { Upload, X, Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import { useAccount } from "wagmi";
+import { useAppKit, useAppKitNetwork } from "@reown/appkit/react";
+import { useSwitchChain } from "wagmi";
+import { config, wagmiAdapter } from "@/libs";
+
+const NETWORK_IDS: Record<string, number> = {
+  base: 8453, // Base mainnet
+  ethereum: 1, // Ethereum mainnet
+  polygon: 137, // Polygon mainnet
+  arbitrum: 42161, // Arbitrum One
+  optimism: 10, // Optimism mainnet
+  bsc: 56, // BNB Smart Chain
+  berachain: 80084, // (contoh ID, cek yg benar)
+  avalanche: 43114, // Avalanche C-Chain mainnet
+};
+
 export default function Component() {
   const [selectedChain, setSelectedChain] = useState("base");
   const [name, setName] = useState("The Pond");
@@ -22,7 +36,11 @@ export default function Component() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [artType, setArtType] = useState<"same" | "unique">("same");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
-
+  const { caipNetwork, caipNetworkId, chainId, switchNetwork } =
+    useAppKitNetwork();
+  const { switchChain, chains } = useSwitchChain({ config });
+  console.log(caipNetwork?.name, caipNetworkId, chainId);
+  console.log(chains);
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setUploadedFile(acceptedFiles[0]);
@@ -56,6 +74,13 @@ export default function Component() {
     multiple: false,
   });
 
+  useEffect(() => {
+    if (selectedChain !== caipNetwork?.name) {
+      const id = NETWORK_IDS[selectedChain];
+      console.log(id);
+      switchChain({ chainId: NETWORK_IDS[selectedChain] });
+    }
+  }, [selectedChain, switchChain, caipNetwork]);
   const clearForm = () => {
     setSelectedChain("base");
     setName("");
@@ -119,6 +144,36 @@ export default function Component() {
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                       Polygon
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="arbitrum">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      Arbitrum
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="optimism">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                      Optimism
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="bsc">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                      BSC (Binance Smart Chain)
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="berachain">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      Berachain
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="avalanche">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      Avalanche
                     </div>
                   </SelectItem>
                 </SelectContent>
@@ -220,7 +275,7 @@ export default function Component() {
               <textarea
                 name="description"
                 id="description-1"
-                className="px-2 py-3"
+                className="px-2 py-3  border-gray-300 border-2"
                 cols={30}
                 rows={10}
               ></textarea>

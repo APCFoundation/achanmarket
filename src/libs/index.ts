@@ -6,10 +6,24 @@ import {
   arbitrum,
   base,
   avalanche,
+  berachain,
+  opBNB,
+  bsc,
 } from "wagmi/chains";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { cookieStorage, createStorage } from "wagmi";
-const networks = [mainnet, arbitrum];
+const networks = [
+  mainnet,
+  arbitrum,
+  polygon,
+  optimism,
+  base,
+  sepolia,
+  berachain,
+  opBNB,
+  bsc,
+  avalanche,
+];
 import { createAppKit } from "@reown/appkit/react";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
@@ -26,14 +40,37 @@ const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({ storage: cookieStorage }),
   networks,
   projectId,
-  chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
+  chains: [
+    mainnet,
+    polygon,
+    optimism,
+    arbitrum,
+    base,
+    sepolia,
+    berachain,
+    opBNB,
+    bsc,
+    avalanche,
+  ],
   ssr: false, // If your dApp uses server side rendering (SSR)
 });
 
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [mainnet, arbitrum, avalanche, base, optimism, polygon, sepolia],
+  networks: [
+    mainnet,
+    arbitrum,
+    avalanche,
+    base,
+    optimism,
+    polygon,
+    sepolia,
+    berachain,
+    opBNB,
+    bsc,
+    avalanche,
+  ],
   defaultNetwork: mainnet,
   metadata: metadata,
   features: {
