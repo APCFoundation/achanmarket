@@ -355,58 +355,86 @@ export default function Component() {
 
               {/* Right side - Artwork upload */}
               <div className="space-y-2">
-                {artworkFile ? (
-                  <div className="border-2 border-gray-300 border-dashed rounded-lg p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Upload className="w-6 h-6 text-gray-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-black">
-                            {artworkFile.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {(artworkFile.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
+                {artType === "same" && (
+                  <>
+                    {artworkFile ? (
+                      <div className="border-2 border-gray-300 border-dashed rounded-lg p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                              <Upload className="w-6 h-6 text-gray-400" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-black">
+                                {artworkFile.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {(artworkFile.size / 1024 / 1024).toFixed(2)} MB
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={removeArtworkFile}
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={removeArtworkFile}
-                        className="text-gray-500 hover:text-gray-700"
+                    ) : (
+                      <div
+                        {...getArtworkRootProps()}
+                        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors min-h-[200px] flex flex-col items-center justify-center ${
+                          isArtworkDragActive
+                            ? "border-blue-400 bg-blue-50"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
                       >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    {...getArtworkRootProps()}
-                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors min-h-[200px] flex flex-col items-center justify-center ${
-                      isArtworkDragActive
-                        ? "border-blue-400 bg-blue-50"
-                        : "border-gray-300 hover:border-gray-400"
-                    }`}
-                  >
-                    <input {...getArtworkInputProps()} />
-                    <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-600 mb-2 font-medium">
-                      {isArtworkDragActive
-                        ? "Drop the files here..."
-                        : "Drop your artwork here to upload"}
-                    </p>
-                    <p className="text-xs text-gray-500 mb-4">
-                      File types allowed: .jpg, .png. Max file size: 10MB
-                    </p>
-                    <Button
-                      variant="outline"
-                      className="bg-white border-gray-300 text-black hover:bg-gray-50"
+                        <input {...getArtworkInputProps()} />
+                        <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-600 mb-2 font-medium">
+                          {isArtworkDragActive
+                            ? "Drop the files here..."
+                            : "Drop your artwork here to upload"}
+                        </p>
+                        <p className="text-xs text-gray-500 mb-4">
+                          File types allowed: .jpg, .png. Max file size: 10MB
+                        </p>
+                        <Button
+                          variant="outline"
+                          className="bg-white border-gray-300 text-black hover:bg-gray-50"
+                        >
+                          Choose Image...
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {artType == "unique" && (
+                  <>
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors min-h-[200px] flex flex-col items-center justify-centerborder-gray-300 hover:border-gray-400
+                    `}
                     >
-                      Choose Image...
-                    </Button>
-                  </div>
+                      <p className="text-gray-600 mb-2 font-medium">
+                        Metadata URL
+                      </p>
+                      <p className="text-[10px] text-gray-500 mb-4">
+                        Check our step-by-step guide on how to generate and
+                        upload your collection assets and metadata.
+                      </p>
+                      <input
+                        className={
+                          "w-full text-[10px] placeholder:text-[10px] px-2 py-2"
+                        }
+                        type="text"
+                        placeholder={"https://ipfs.io/<CID>"}
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             </div>
