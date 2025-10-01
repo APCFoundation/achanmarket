@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Upload, X, Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import { useAppKit, useAppKitNetwork } from "@reown/appkit/react";
+import { useAppKitNetwork } from "@reown/appkit/react";
 import { useSwitchChain } from "wagmi";
 import { config, wagmiAdapter } from "@/libs";
 
@@ -29,32 +29,72 @@ const NETWORK_IDS: Record<string, number> = {
   avalanche: 43114, // Avalanche C-Chain mainnet
 };
 
+type FormState = {
+  selectedChain: string;
+  name: string;
+  symbol: string;
+  description: string;
+  externalUrl: string;
+  mintPrice: number | "";
+  royaltyFee: number | "";
+  maxSupply: number | "";
+  limitPerWallet: number | "";
+  collectionFile: File | null;
+  artType: "same" | "unique";
+  artworkFile: File | null;
+};
+
 export default function Component() {
-  const [selectedChain, setSelectedChain] = useState("base");
-  const [name, setName] = useState("The Pond");
-  const [symbol, setSymbol] = useState("POND");
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [artType, setArtType] = useState<"same" | "unique">("same");
-  const [artworkFile, setArtworkFile] = useState<File | null>(null);
-  const { caipNetwork, caipNetworkId, chainId, switchNetwork } =
-    useAppKitNetwork();
+  const [form, setForm] = useState<FormState>({
+    selectedChain: "base",
+    name: "The Pond",
+    symbol: "POND",
+    description: "",
+    externalUrl: "",
+    mintPrice: "",
+    royaltyFee: "",
+    maxSupply: "",
+    limitPerWallet: "",
+    collectionFile: null,
+    artType: "same",
+    artworkFile: null,
+  });
+  const {
+    selectedChain,
+    name,
+    symbol,
+    description,
+    externalUrl,
+    mintPrice,
+    royaltyFee,
+    maxSupply,
+    limitPerWallet,
+    collectionFile,
+    artType,
+    artworkFile,
+  } = form;
+  const { caipNetwork, caipNetworkId, chainId } = useAppKitNetwork();
   const { switchChain, chains } = useSwitchChain({ config });
   console.log(caipNetwork?.name, caipNetworkId, chainId);
   console.log(chains);
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDropCollection = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      setUploadedFile(acceptedFiles[0]);
+      setForm((prev) => ({ ...prev, collectionFile: acceptedFiles[0] }));
     }
   }, []);
 
   const onDropArtwork = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      setArtworkFile(acceptedFiles[0]);
+      setForm((prev) => ({ ...prev, artworkFile: acceptedFiles[0] }));
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+  const {
+    getRootProps: getCollectionRootProps,
+    getInputProps: getCollectionInputProps,
+    isDragActive: isCollectionDragActive,
+  } = useDropzone({
+    onDrop: onDropCollection,
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".gif"],
     },
@@ -74,6 +114,31 @@ export default function Component() {
     multiple: false,
   });
 
+  const clearForm = () => {
+    setForm({
+      selectedChain: "base",
+      name: "",
+      symbol: "",
+      description: "",
+      externalUrl: "",
+      mintPrice: "",
+      royaltyFee: "",
+      maxSupply: "",
+      limitPerWallet: "",
+      collectionFile: null,
+      artType: "same",
+      artworkFile: null,
+    });
+  };
+
+  const removeFile = () => {
+    setForm((prev) => ({ ...prev, collectionFile: null }));
+  };
+
+  const removeArtworkFile = () => {
+    setForm((prev) => ({ ...prev, artworkFile: null }));
+  };
+
   useEffect(() => {
     if (selectedChain !== caipNetwork?.name) {
       const id = NETWORK_IDS[selectedChain];
@@ -81,22 +146,6 @@ export default function Component() {
       switchChain({ chainId: NETWORK_IDS[selectedChain] });
     }
   }, [selectedChain, switchChain, caipNetwork]);
-  const clearForm = () => {
-    setSelectedChain("base");
-    setName("");
-    setSymbol("");
-    setUploadedFile(null);
-    setArtType("same");
-    setArtworkFile(null);
-  };
-
-  const removeFile = () => {
-    setUploadedFile(null);
-  };
-
-  const removeArtworkFile = () => {
-    setArtworkFile(null);
-  };
 
   return (
     <div className={""}>
@@ -120,7 +169,12 @@ export default function Component() {
               <Label htmlFor="chain" className="text-black font-medium">
                 EVM Chain <span className="text-red-500">*</span>
               </Label>
-              <Select value={selectedChain} onValueChange={setSelectedChain}>
+              <Select
+                value={selectedChain}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, selectedChain: val }))
+                }
+              >
                 <SelectTrigger className="w-full bg-white border-gray-300 text-black">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -189,7 +243,9 @@ export default function Component() {
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   className="bg-white border-gray-300 text-black placeholder:text-gray-500"
                   placeholder="The Pond"
                 />
@@ -201,9 +257,87 @@ export default function Component() {
                 <Input
                   id="symbol"
                   value={symbol}
-                  onChange={(e) => setSymbol(e.target.value)}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, symbol: e.target.value }))
+                  }
                   className="bg-white border-gray-300 text-black placeholder:text-gray-500"
                   placeholder="POND"
+                />
+              </div>
+            </div>
+            {/* price and royaltie */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="mintPrice" className="text-black font-medium">
+                  Mint Price <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="mintPrice"
+                  value={mintPrice}
+                  type="number"
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      mintPrice: val === "" ? "" : Number(val),
+                    }));
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="royaltyFee" className="text-black font-medium">
+                  Royalty Fee <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="royaltyFee"
+                  value={royaltyFee}
+                  type="number"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      royaltyFee: val === "" ? "" : Number(val),
+                    }));
+                  }}
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                />
+              </div>
+            </div>
+            {/* Max supply & Mint Limit per Wallet */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="MaxSupply" className="text-black font-medium">
+                  Max Supply <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="MaxSupply"
+                  value={maxSupply}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      maxSupply: val === "" ? "" : Number(val),
+                    }));
+                  }}
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="limit" className="text-black font-medium">
+                  Max Limit per Wallet <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="limit"
+                  value={limitPerWallet}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      limitPerWallet: val === "" ? "" : Number(val),
+                    }));
+                  }}
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -217,7 +351,7 @@ export default function Component() {
               </p>
 
               <div className="mt-4">
-                {uploadedFile ? (
+                {collectionFile ? (
                   <div className="border-2 border-gray-300 border-dashed rounded-lg p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -226,10 +360,10 @@ export default function Component() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-black">
-                            {uploadedFile.name}
+                            {collectionFile.name}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                            {(collectionFile.size / 1024 / 1024).toFixed(2)} MB
                           </p>
                         </div>
                       </div>
@@ -245,17 +379,17 @@ export default function Component() {
                   </div>
                 ) : (
                   <div
-                    {...getRootProps()}
+                    {...getCollectionRootProps()}
                     className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
-                      isDragActive
+                      isCollectionDragActive
                         ? "border-blue-400 bg-blue-50"
                         : "border-gray-300 hover:border-gray-400"
                     }`}
                   >
-                    <input {...getInputProps()} />
+                    <input {...getCollectionInputProps()} />
                     <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600 mb-4">
-                      {isDragActive
+                      {isCollectionDragActive
                         ? "Drop the files here..."
                         : "Drop your artwork here to upload"}
                     </p>
@@ -275,6 +409,9 @@ export default function Component() {
               <textarea
                 name="description"
                 id="description-1"
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, description: e.target.value }))
+                }
                 className="px-2 py-3  border-gray-300 border-2"
                 cols={30}
                 rows={10}
@@ -285,7 +422,9 @@ export default function Component() {
               <div className="space-y-3">
                 {/* Same Artwork Option */}
                 <div
-                  onClick={() => setArtType("same")}
+                  onClick={() =>
+                    setForm((prev) => ({ ...prev, artType: "same" }))
+                  }
                   className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     artType === "same"
                       ? "border-green-500 bg-green-50"
@@ -319,7 +458,9 @@ export default function Component() {
 
                 {/* Unique Artwork Option */}
                 <div
-                  onClick={() => setArtType("unique")}
+                  onClick={() =>
+                    setForm((prev) => ({ ...prev, artType: "unique" }))
+                  }
                   className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     artType === "unique"
                       ? "border-green-500 bg-green-50"

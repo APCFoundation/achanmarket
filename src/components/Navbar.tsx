@@ -22,13 +22,6 @@ export default function Navbar() {
           href={"/dashboard"}
           className=" logo-navbar flex items-center mr-10 gap-2"
         >
-          <Image
-            width={500}
-            height={500}
-            src="/achan-logo-2.png"
-            className="size-12 object-contain flex"
-            alt="logo"
-          />
           <span>A-chan Market</span>
         </Link>
         <div className="flex items-center gap-5 ">
