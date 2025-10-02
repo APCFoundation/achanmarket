@@ -70,10 +70,11 @@ export default function Component() {
     artType,
     artworkFile,
   } = form;
+  const [uploading, setUploading] = useState(false);
   const { caipNetwork, caipNetworkId, chainId } = useAppKitNetwork();
   const { switchChain, chains } = useSwitchChain({ config });
-  console.log(caipNetwork?.name, caipNetworkId, chainId);
-  console.log(chains);
+  // console.log(caipNetwork?.name, caipNetworkId, chainId);
+  // console.log(chains);
   const onDropCollection = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setForm((prev) => ({ ...prev, collectionFile: acceptedFiles[0] }));
@@ -136,37 +137,44 @@ export default function Component() {
   };
 
   const submitHandle = async () => {
-    const formData = new FormData();
+    setUploading(true);
+    try {
+      const formData = new FormData();
 
-    // tambahkan field biasa
-    formData.append("selectedChain", form.selectedChain);
-    formData.append("name", form.name);
-    formData.append("symbol", form.symbol);
-    formData.append("description", form.description);
-    formData.append("mintPrice", String(form.mintPrice));
-    formData.append("royaltyFee", String(form.royaltyFee));
-    formData.append("maxSupply", String(form.maxSupply));
-    formData.append("limitPerWallet", String(form.limitPerWallet));
-    formData.append("artType", form.artType);
+      // tambahkan field biasa
+      formData.append("selectedChain", form.selectedChain);
+      formData.append("name", form.name);
+      formData.append("symbol", form.symbol);
+      formData.append("description", form.description);
+      formData.append("mintPrice", String(form.mintPrice));
+      formData.append("royaltyFee", String(form.royaltyFee));
+      formData.append("maxSupply", String(form.maxSupply));
+      formData.append("limitPerWallet", String(form.limitPerWallet));
+      formData.append("artType", form.artType);
 
-    // tambahkan file (jangan lupa cek null biar aman)
-    if (form.collectionFile) {
-      formData.append("collectionFile", form.collectionFile);
+      // tambahkan file (jangan lupa cek null biar aman)
+      if (form.collectionFile) {
+        formData.append("collectionFile", form.collectionFile);
+      }
+      if (form.artworkFile) {
+        formData.append("artworkFile", form.artworkFile);
+      }
+
+      // fetch ke BE
+      const req = await fetch("/api/contracts/test", {
+        method: "POST",
+        body: formData,
+        // ❌ JANGAN set Content-Type manual,
+        // biarkan browser set otomatis (dengan boundary multipart)
+      });
+
+      const request = await req.json();
+      console.log("Response BE:", request);
+    } catch (error) {
+      console.log(error, "memek");
+    } finally {
+      setUploading(false);
     }
-    if (form.artworkFile) {
-      formData.append("artworkFile", form.artworkFile);
-    }
-
-    // fetch ke BE
-    const req = await fetch("/api/contract/createNft", {
-      method: "POST",
-      body: formData,
-      // ❌ JANGAN set Content-Type manual,
-      // biarkan browser set otomatis (dengan boundary multipart)
-    });
-
-    const request = await req.json();
-    console.log("Response BE:", request);
   };
   useEffect(() => {
     if (selectedChain !== caipNetwork?.name) {
@@ -609,6 +617,12 @@ export default function Component() {
               </div>
             </div>
           </div>
+          <button
+            onClick={submitHandle}
+            className="w-full bg-lime-500 py-3 text-center text-black font-press pt-10 cursor-pointer "
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>

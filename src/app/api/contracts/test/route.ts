@@ -22,51 +22,54 @@ export async function POST(req: Request) {
 
     let collectionFileCID: string | null = null;
     let artworkFileCID: string | null = null;
+    let metadataCID: string | null = null;
 
-    // upload ke Pinata
+    // Step 1: Upload collectionFile (optional, misal logo koleksi)
     if (collectionFile) {
       const result = await pinata.upload.public.file(collectionFile);
       collectionFileCID = `ipfs://${result.cid}`;
     }
 
+    // Step 2: Upload artwork (gambar NFT utama)
     if (artworkFile) {
+      const result = await pinata.upload.public.file(artworkFile);
+      artworkFileCID = `ipfs://${result.cid}`;
+    }
+
+    // Step 3: Buat metadata JSON (wajib untuk NFT 1155/721)
+    if (artworkFileCID) {
       const metadata = {
         name,
         symbol,
         description,
-        image: collectionFileCID,
+        image: artworkFileCID, // pakai gambar NFT
         attributes: [
           { trait_type: "Chain", value: selectedChain },
           { trait_type: "Art Type", value: artType },
+          { trait_type: "Mint Price", value: mintPrice },
+          { trait_type: "Royalty Fee", value: royaltyFee },
+          { trait_type: "Max Supply", value: maxSupply },
+          { trait_type: "Limit Per Wallet", value: limitPerWallet },
         ],
+        collection_logo: collectionFileCID || null,
       };
-      const result = await pinata.upload.public.file(artworkFile, { metadata });
-      console.log(result);
+
+      // upload metadata JSON ke Pinata
+      const metaResult = await pinata.upload.public.json(metadata);
+      metadataCID = `ipfs://${metaResult.cid}`;
     }
-
-    // metadata NFT → bisa kamu pin juga ke Pinata
-
-    // const metaResult = await pinata.upload.public.json(metadata);
 
     return NextResponse.json({
       status: "success",
       message: "NFT uploaded to Pinata",
       data: {
-        selectedChain,
-        name,
-        symbol,
-        description,
-        mintPrice,
-        royaltyFee,
-        maxSupply,
-        limitPerWallet,
-        artType,
         collectionFileCID,
         artworkFileCID,
-        metadataCID: `ipfs://${metaResult.IpfsHash}`,
+        metadataCID,
       },
     });
   } catch (err: any) {
+    console.error("Upload Error:", err);
     return NextResponse.json(
       { status: "error", message: err.message },
       { status: 500 }
