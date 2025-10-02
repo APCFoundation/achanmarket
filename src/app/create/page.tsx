@@ -34,12 +34,11 @@ type FormState = {
   name: string;
   symbol: string;
   description: string;
-  externalUrl: string;
   mintPrice: number | "";
   royaltyFee: number | "";
   maxSupply: number | "";
   limitPerWallet: number | "";
-  collectionFile: File | null;
+  collectionFile?: File | null;
   artType: "same" | "unique";
   artworkFile: File | null;
 };
@@ -50,7 +49,6 @@ export default function Component() {
     name: "The Pond",
     symbol: "POND",
     description: "",
-    externalUrl: "",
     mintPrice: "",
     royaltyFee: "",
     maxSupply: "",
@@ -64,7 +62,6 @@ export default function Component() {
     name,
     symbol,
     description,
-    externalUrl,
     mintPrice,
     royaltyFee,
     maxSupply,
@@ -120,7 +117,6 @@ export default function Component() {
       name: "",
       symbol: "",
       description: "",
-      externalUrl: "",
       mintPrice: "",
       royaltyFee: "",
       maxSupply: "",
@@ -139,6 +135,39 @@ export default function Component() {
     setForm((prev) => ({ ...prev, artworkFile: null }));
   };
 
+  const submitHandle = async () => {
+    const formData = new FormData();
+
+    // tambahkan field biasa
+    formData.append("selectedChain", form.selectedChain);
+    formData.append("name", form.name);
+    formData.append("symbol", form.symbol);
+    formData.append("description", form.description);
+    formData.append("mintPrice", String(form.mintPrice));
+    formData.append("royaltyFee", String(form.royaltyFee));
+    formData.append("maxSupply", String(form.maxSupply));
+    formData.append("limitPerWallet", String(form.limitPerWallet));
+    formData.append("artType", form.artType);
+
+    // tambahkan file (jangan lupa cek null biar aman)
+    if (form.collectionFile) {
+      formData.append("collectionFile", form.collectionFile);
+    }
+    if (form.artworkFile) {
+      formData.append("artworkFile", form.artworkFile);
+    }
+
+    // fetch ke BE
+    const req = await fetch("/api/contract/createNft", {
+      method: "POST",
+      body: formData,
+      // ❌ JANGAN set Content-Type manual,
+      // biarkan browser set otomatis (dengan boundary multipart)
+    });
+
+    const request = await req.json();
+    console.log("Response BE:", request);
+  };
   useEffect(() => {
     if (selectedChain !== caipNetwork?.name) {
       const id = NETWORK_IDS[selectedChain];
