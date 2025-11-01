@@ -5,19 +5,19 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Upload, X, Check } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import { abiNFTMarketplaceFactory } from "@/abi.js";
+import { Address, parseEther } from "viem";
+import { Upload, X, Check, ExternalLink } from "lucide-react";
 import { useAppKitNetwork } from "@reown/appkit/react";
-import { useSwitchChain } from "wagmi";
-import { config, wagmiAdapter } from "@/libs";
-
+import { useSwitchChain, useWriteContract } from "wagmi";
+import { config } from "@/lib";
+import { Square } from "ldrs/react";
+import "ldrs/react/Square.css";
+import { toast } from "sonner";
+import Link from "next/link";
+import { MultiStepLoader } from "@/components/ui/multi-step-loader-custom";
+import { SwitchChain } from "@/components/dashboard/createpage";
+import hashObject from "@/lib/hashObject";
 const NETWORK_IDS: Record<string, number> = {
   base: 8453, // Base mainnet
   ethereum: 1, // Ethereum mainnet
@@ -27,7 +27,11 @@ const NETWORK_IDS: Record<string, number> = {
   bsc: 56, // BNB Smart Chain
   berachain: 80084, // (contoh ID, cek yg benar)
   avalanche: 43114, // Avalanche C-Chain mainnet
+  sepolia: 11155111,
 };
+
+const MARKETPLACE_CONTRACT_ADDRESS = process.env
+  .MARKETPLACE_CONTRACT_ADDRESS as Address;
 
 type FormState = {
   selectedChain: string;
@@ -70,11 +74,15 @@ export default function Component() {
     artType,
     artworkFile,
   } = form;
+  const { caipNetwork } = useAppKitNetwork();
+  const { writeContractAsync } = useWriteContract({ config });
+  const { switchChain } = useSwitchChain({ config });
   const [uploading, setUploading] = useState(false);
-  const { caipNetwork, caipNetworkId, chainId } = useAppKitNetwork();
-  const { switchChain, chains } = useSwitchChain({ config });
-  // console.log(caipNetwork?.name, caipNetworkId, chainId);
-  // console.log(chains);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [metadata, setMetadata] = useState<any | null>();
+  const [previousMetadataHash, setPreviousMetadataHash] = useState<
+    string | null
+  >();
   const onDropCollection = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setForm((prev) => ({ ...prev, collectionFile: acceptedFiles[0] }));
@@ -136,46 +144,130 @@ export default function Component() {
     setForm((prev) => ({ ...prev, artworkFile: null }));
   };
 
-  const submitHandle = async () => {
+  const loadingStates = [
+    { text: "Uploading to ipfs" },
+    { text: "Creating NFT..." },
+    { text: "Waiting for transaction..." },
+    { text: "Nft succesfully created" },
+  ];
+
+  const submitHandle2 = async () => {
+    if (!form.name || !form.symbol || !form.description) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
     setUploading(true);
+    setCurrentStep(0);
+
     try {
       const formData = new FormData();
-
-      // tambahkan field biasa
-      formData.append("selectedChain", form.selectedChain);
       formData.append("name", form.name);
       formData.append("symbol", form.symbol);
       formData.append("description", form.description);
-      formData.append("mintPrice", String(form.mintPrice));
-      formData.append("royaltyFee", String(form.royaltyFee));
-      formData.append("maxSupply", String(form.maxSupply));
-      formData.append("limitPerWallet", String(form.limitPerWallet));
       formData.append("artType", form.artType);
 
-      // tambahkan file (jangan lupa cek null biar aman)
-      if (form.collectionFile) {
+      if (form.collectionFile)
         formData.append("collectionFile", form.collectionFile);
-      }
-      if (form.artworkFile) {
-        formData.append("artworkFile", form.artworkFile);
-      }
+      if (form.artworkFile) formData.append("artworkFile", form.artworkFile);
 
-      // fetch ke BE
-      const req = await fetch("/api/contracts/test", {
-        method: "POST",
-        body: formData,
-        // ❌ JANGAN set Content-Type manual,
-        // biarkan browser set otomatis (dengan boundary multipart)
+      // Step 1: Uploading image
+      setCurrentStep(0);
+      const currentMetadataHash = hashObject({
+        name,
+        symbol,
+        description,
+        artType,
+        // You could also include file names if you want to detect image changes
+        collectionFileName: collectionFile?.name || "",
+        artworkFileName: artworkFile?.name || "",
+      });
+      // Check if metadata or images changed
+      const metadataChanged = currentMetadataHash !== previousMetadataHash;
+      if (!metadata) {
+        const res = await fetch("/api/contracts/create", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await res.json();
+        if (!res.ok || !result?.data?.metadataCID) {
+          throw new Error(result?.message || "Upload failed");
+        }
+
+        const { metadataCID } = result.data;
+        setMetadata(metadataCID);
+        console.log("✅ Metadata CID:", metadataCID);
+      }
+      // 🚀 Upload metadata to backend
+
+      // Step 3: Creating NFT
+      setCurrentStep(1);
+
+      // Convert values
+      const supply = BigInt(maxSupply);
+      const price = parseEther(String(mintPrice));
+
+      // Step 4: Waiting for transaction
+      setCurrentStep(2);
+
+      // 🧾 Kirim transaksi ke blockchain
+      const tx = await writeContractAsync({
+        abi: abiNFTMarketplaceFactory,
+        functionName: "createNFTCollection",
+        address: MARKETPLACE_CONTRACT_ADDRESS,
+        args: [metadata, supply, price],
       });
 
-      const request = await req.json();
-      console.log("Response BE:", request);
-    } catch (error) {
-      console.log(error, "memek");
-    } finally {
+      // Step 5: Success
+      setCurrentStep(3);
+
+      // ✅ Jika transaksi sukses
+      if (typeof tx === "string" && tx.startsWith("0x")) {
+        toast.success("🎉 NFT contract created successfully!", {
+          position: "top-center",
+          description: (
+            <Link
+              href={"https://sepolia.etherscan.io/tx/" + tx}
+              target={"_blank"}
+            >
+              check transaction
+            </Link>
+          ),
+          action: {
+            label: (
+              <div>
+                <ExternalLink className="w-4 h-4 ml-2" />
+              </div>
+            ),
+            onClick: () => {
+              window.open("https://sepolia.etherscan.io/tx/" + tx, "_blank");
+            },
+          },
+        });
+
+        // Tunggu sebentar sebelum menutup loader agar user bisa melihat status "success"
+        setTimeout(() => {
+          setUploading(false);
+          setCurrentStep(0); // Reset untuk next time
+        }, 2000);
+      } else {
+        throw new Error("Transaction hash not received");
+      }
+    } catch (error: any) {
+      console.error("❌ NFT Creation Error:", error);
+      const message =
+        error?.shortMessage ||
+        error?.message ||
+        "Transaction failed or rejected";
+      toast.error(`Failed to create NFT contract: ${message}`, {
+        position: "top-center",
+      });
       setUploading(false);
+      setCurrentStep(0);
     }
   };
+
   useEffect(() => {
     if (selectedChain !== caipNetwork?.name) {
       const id = NETWORK_IDS[selectedChain];
@@ -186,90 +278,24 @@ export default function Component() {
 
   return (
     <div className={""}>
-      <Navbar />
+      <MultiStepLoader
+        loadingStates={loadingStates}
+        loading={uploading}
+        currentStep={currentStep}
+      />
       <div className="min-h-screen bg-white p-6 font-press">
         <div className="max-w-2xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-end mb-8">
-            <button
-              onClick={clearForm}
-              className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1"
-            >
-              <X className="w-4 h-4" />
-              Clear Form
-            </button>
-          </div>
+          {/* HeaderClearForm */}
+          <HeaderClearForm clearForm={clearForm} />
 
           <div className="space-y-6">
             {/* EVM Chain */}
-            <div className="space-y-2">
-              <Label htmlFor="chain" className="text-black font-medium">
-                EVM Chain <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={selectedChain}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, selectedChain: val }))
-                }
-              >
-                <SelectTrigger className="w-full bg-white border-gray-300 text-black">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <SelectValue />
-                  </div>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="base">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      Base
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="ethereum">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                      Ethereum
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="polygon">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                      Polygon
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="arbitrum">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      Arbitrum
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="optimism">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      Optimism
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bsc">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      BSC (Binance Smart Chain)
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="berachain">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      Berachain
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="avalanche">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                      Avalanche
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <SwitchChain
+              value={selectedChain}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, selectedChain: val }))
+              }
+            />
 
             {/* Name and Symbol */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -312,7 +338,7 @@ export default function Component() {
                   id="mintPrice"
                   value={mintPrice}
                   type="number"
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows "
                   onChange={(e) => {
                     const val = e.target.value;
                     setForm((prev) => ({
@@ -337,7 +363,7 @@ export default function Component() {
                       royaltyFee: val === "" ? "" : Number(val),
                     }));
                   }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
                 />
               </div>
             </div>
@@ -350,6 +376,7 @@ export default function Component() {
                 <Input
                   id="MaxSupply"
                   value={maxSupply}
+                  type="number"
                   onChange={(e) => {
                     const val = e.target.value;
                     setForm((prev) => ({
@@ -357,7 +384,7 @@ export default function Component() {
                       maxSupply: val === "" ? "" : Number(val),
                     }));
                   }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
                 />
               </div>
               <div className="space-y-2">
@@ -367,6 +394,7 @@ export default function Component() {
                 <Input
                   id="limit"
                   value={limitPerWallet}
+                  type="number"
                   onChange={(e) => {
                     const val = e.target.value;
                     setForm((prev) => ({
@@ -374,7 +402,7 @@ export default function Component() {
                       limitPerWallet: val === "" ? "" : Number(val),
                     }));
                   }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
                 />
               </div>
             </div>
@@ -446,6 +474,7 @@ export default function Component() {
               <textarea
                 name="description"
                 id="description-1"
+                value={description}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, description: e.target.value }))
                 }
@@ -618,13 +647,39 @@ export default function Component() {
             </div>
           </div>
           <button
-            onClick={submitHandle}
-            className="w-full bg-lime-500 py-3 text-center text-black font-press pt-10 cursor-pointer "
+            onClick={submitHandle2}
+            disabled={uploading}
+            className="w-full flex justify-center items-center  bg-lime-500 py-5 mt-5 text-center text-black font-press cursor-pointer "
           >
-            Submit
+            {uploading ? (
+              <Square
+                size="20"
+                stroke="5"
+                strokeLength="0.25"
+                bgOpacity="0.1"
+                speed="1.2"
+                color="black"
+              />
+            ) : (
+              "Submit"
+            )}
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+const HeaderClearForm = ({ clearForm }: { clearForm: () => void }) => {
+  return (
+    <div className="flex justify-end mb-8 ">
+      <button
+        onClick={clearForm}
+        className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1"
+      >
+        <X className="w-4 h-4" />
+        Clear Form
+      </button>
+    </div>
+  );
+};

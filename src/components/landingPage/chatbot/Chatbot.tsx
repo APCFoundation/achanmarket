@@ -1,9 +1,9 @@
 "use client";
-import { cn } from "@/libs/utils";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { SendIcon } from "lucide-react";
 import { Square } from "ldrs/react";
 import "ldrs/react/Square.css";

@@ -1,9 +1,8 @@
 "use client";
-import { wagmiAdapter } from "@/libs";
+import { wagmiAdapter } from "@/lib";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, cookieToInitialState, type Config } from "wagmi";
-import queryClient from "@/libs/config/queryClient";
-
+import queryClient from "@/lib/config/queryClient";
 const Provider = ({
   children,
   cookies,

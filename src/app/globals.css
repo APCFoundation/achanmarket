@@ -312,3 +312,7 @@
 .wallet-adapter-button:hover {
   background-color: #7e22ce !important;
 }
+
+.no-number-arrows {
+  @apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+}

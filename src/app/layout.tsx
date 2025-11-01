@@ -3,6 +3,7 @@ import { Inter, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import Provider from "@/components/Provider";
 import { headers } from "next/headers";
+import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const pressFont = Press_Start_2P({
   weight: ["400"],
@@ -30,7 +31,10 @@ export default async function RootLayout({
         className={` ${inter.variable} ${pressFont.variable} `}
         suppressHydrationWarning
       >
-        <Provider cookies={cookies}>{children}</Provider>
+        <Provider cookies={cookies}>
+          <Toaster richColors />
+          <main>{children}</main>
+        </Provider>
       </body>
     </html>
   );

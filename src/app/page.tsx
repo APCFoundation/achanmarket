@@ -2,24 +2,25 @@
 import Image from "next/image";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
-import DiscoverButton from "@/components/DiscoverButton";
-import HeaderText from "@/components/HeaderText";
-import Line from "@/components/Line";
-import BackGround from "@/components/Background";
-import Navigation from "@/components/Navigation";
 import { useGSAP } from "@gsap/react";
-import Vector from "@/components/Vector";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import MainInventory from "@/components/Inventory/MainInventory";
-import Badge from "@/components/Badge";
-import Circles from "@/components/Circles";
-import Backed from "@/components/landingPage/secondpage/backed";
+import {
+  Backed,
+  Badge,
+  Circles,
+  DiscoverButton,
+  HeaderText,
+  InventoryCore,
+  Line,
+  Menu,
+  Navigation,
+  Background,
+  Vector,
+} from "@/components/landingPage";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import Chatbot from "@/components/chatbot/Chatbot";
-import Menu from "@/components/landingPage/Menu";
+import Chatbot from "@/components/landingPage/chatbot/Chatbot";
 
-const Character = dynamic(() => import("@/components/Character"), {
+const Character = dynamic(() => import("@/components/landingPage/Character"), {
   ssr: false,
 });
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -282,7 +283,7 @@ export default function Home() {
         <Line className="absolute xl:right-7 xl:bottom-7 right-3 bottom-0 line-animation sm:block hidden " />
         <Badge />
         <HeaderText className="absolute font-press text-[3vw] xl:top-3 top-4 sm:translate-x-[-3rem]   xl:scale-100 lg:scale-90 scale-50  ravo " />
-        <BackGround className="animation-behind animation absolute" />
+        <Background className="animation-behind animation absolute" />
         {/* <Character /> */}
         {/* <div className={"size-[40rem] absolute"}>
           <Image
@@ -310,7 +311,7 @@ export default function Home() {
             );
           })}
         </div>
-        <MainInventory />
+        <InventoryCore />
 
         <Image
           alt=""

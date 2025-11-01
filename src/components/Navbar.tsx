@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useSignMessage } from "wagmi";
 import useHydrate from "@/hook/useHydrate";
-import { shortenAddress } from "@/libs/shortenAddress";
+import { shortenAddress } from "@/lib/shortenAddress";
 import { useAppKit } from "@reown/appkit/react";
 export default function Navbar() {
   const { address, isConnected } = useAccount({});
@@ -39,8 +39,8 @@ export default function Navbar() {
             {shortenAddress(address)}
           </div>
         ) : (
-          <div className="text-[10px] text-center text-black font-bold flex bg-lime-400  w-fit px-3 py-2 rounded-2xl mx-auto hover:bg-lime-600 cursor-pointer">
-            <button onClick={handleConnect}>Connect Your Wallet</button>
+          <div className="text-[10px] text-center text-black font-bold flex bg-lime-400  w-fit px-4 py-2 rounded-2xl mx-auto hover:bg-lime-600 cursor-pointer">
+            <button onClick={handleConnect}>Connect Wallet</button>
           </div>
         )}
       </div>

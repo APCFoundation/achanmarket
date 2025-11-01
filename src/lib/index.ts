@@ -17,6 +17,7 @@ const networks = [
   arbitrum,
   polygon,
   optimism,
+
   base,
   sepolia,
   berachain,
