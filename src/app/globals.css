@@ -303,9 +303,16 @@
   scrollbar-width: thin;
 }
 
-/* .chatbot-scroll-ui::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
-  background-color: #aaaaaa; 
-} 
-*/
+/* Custom wallet button styles */
+.wallet-adapter-button {
+  background-color: #9333ea !important;
+  border-radius: 0.5rem !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: #7e22ce !important;
+}
+
+.no-number-arrows {
+  @apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+}

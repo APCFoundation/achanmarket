@@ -14,6 +14,13 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname:
+          "somnia-avatar-v2-view-prod-dot-metaverse-browser-422108.uc.r.appspot.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

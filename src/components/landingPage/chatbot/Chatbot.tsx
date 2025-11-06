@@ -3,13 +3,13 @@ import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Input } from "../ui/input";
-import { LoaderCircle, SendIcon } from "lucide-react";
+import { Input } from "../../ui/input";
+import { SendIcon } from "lucide-react";
 import { Square } from "ldrs/react";
 import "ldrs/react/Square.css";
 import { Tailspin } from "ldrs/react";
 import "ldrs/react/Tailspin.css";
-
+import ReactMarkdown from "react-markdown";
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -80,22 +80,9 @@ const Chatbot = () => {
   );
 };
 
-const Header = () => {
-  return <div className={"font-press text-white"}>Chatbot</div>;
-};
-
-type MessagesContent = { role: string; content: string };
 const Container = () => {
-  /**
-   * Alur chatbot
-   * 1. user memasukkan pertanyaan
-   * - usestate input
-   * -
-   * 2. bot menjawab
-   */
   const [userInput, setUserInput] = useState<string>("");
   const [messages, setMessages] = useState<MessagesContent[]>([]);
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -121,32 +108,6 @@ const Container = () => {
       setUserInput("");
     }
   };
-
-  // const typeEffect = (text: string) => {
-  //   let index = 0;
-  //   let currentText = "";
-
-  //   // Tambahin placeholder message dulu
-  //   setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-  //   const interval = setInterval(() => {
-  //     currentText += text[index];
-  //     index++;
-
-  //     setMessages((prev) => {
-  //       const updated = [...prev];
-  //       updated[updated.length - 1] = {
-  //         role: "assistant",
-  //         content: currentText,
-  //       }; // update terakhir
-  //       return updated;
-  //     });
-
-  //     if (index >= text.length) {
-  //       clearInterval(interval);
-  //     }
-  //   }, 40);
-  // };
 
   // get Data
   useEffect(() => {
@@ -188,7 +149,7 @@ const Container = () => {
                       : "size-5   bg-gray-500 absolute -bottom-4  -left-1"
                   )}
                 ></div>
-                {item.content}
+                <ReactMarkdown>{item.content}</ReactMarkdown>
               </div>
             </div>
           ))}
@@ -232,6 +193,12 @@ const Container = () => {
   );
 };
 
+const Header = () => {
+  return <div className={"font-press text-white"}>Chatbot</div>;
+};
+
+type MessagesContent = { role: string; content: string };
+
 const CloseButton = (props: { onClick: () => void; isOpen: boolean }) => {
   const { onClick, isOpen } = props;
   return (
@@ -249,46 +216,5 @@ const CloseButton = (props: { onClick: () => void; isOpen: boolean }) => {
     </div>
   );
 };
+
 export default Chatbot;
-
-const IsiChatSimpenSementara = () => (
-  <div className="pb-10 py-3 flex flex-col gap-3">
-    {/* chat bot nya */}
-    {/*  
-        alur UI
-        Color:
-        1. jika role / yang chat bot maka css nya kasih bg-gray-500
-        2. jika role / yang user maka css nya kasih bg-blue-500
-        Posisi:
-        1. jika role / yang chat bot maka css nya kasih self-start
-        2. jika role / yang user maka css nya kasih self-end
-        segitiga bawah:
-        1. jika role / yang chat bot maka css nya kasih -bottom-4  -left-1
-        2. jika role / yang user maka css nya kasih -bottom-4  -right-1 -scale-x-100
-        */}
-
-    <div
-      id="bot"
-      className="w-fit bg-gray-500 rounded-md px-4 py-1 text-white relative"
-    >
-      <div
-        style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
-        className="size-5   bg-gray-500 absolute -bottom-4  -left-1"
-      ></div>
-      Hi there! How can I help you? Lorem ipsum dolor sit amet consectetur Lorem
-      ipsum dolor sit amet. Lorem ipsum dolor sit amet consectetur adipisicing
-      elit. Laboriosam, quibusdam!
-    </div>
-    <div
-      id="user"
-      className="w-fit bg-blue-500 rounded-md px-4 py-1 self-end text-white relative"
-    >
-      <div
-        style={{ clipPath: "polygon(70% 0, 42% 50%, 100% 20%)" }}
-        className="size-5   bg-blue-500 absolute -bottom-4  -right-1 -scale-x-100"
-      ></div>
-      Hi there!
-    </div>
-    <div className="w-20 h-[50rem] bg-pink-500"></div>
-  </div>
-);
