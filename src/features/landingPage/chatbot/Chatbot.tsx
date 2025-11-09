@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Input } from "../../ui/input";
+import { Input } from "../../../components/ui/input";
 import { SendIcon } from "lucide-react";
 import { Square } from "ldrs/react";
 import "ldrs/react/Square.css";

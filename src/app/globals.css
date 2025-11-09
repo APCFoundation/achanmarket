@@ -1,7 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+/* Tambahkan ini di bawah import utama */
+@source inline("sm:-bottom-[40rem]");
+@source inline("-bottom-[30rem]");
+@source inline("sm:-bottom-[10rem]");
+@source inline("-bottom-[5rem]");
+@source inline("sm:-bottom-[45rem]");
+@source inline("-bottom-[35rem]");
+@source inline("-left-20");
+@source inline("w-[41rem]");
+@source inline("sm:w-[40rem]");
+@source inline("w-[60rem]");
+@source inline("w-[40rem]");
+@source inline("font-press");
 
+/* 🌈 Custom CSS variables */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -11,10 +25,12 @@
   --d-inside-margin: 11vw;
 }
 
+/* Global behaviors */
 * {
   scroll-behavior: smooth;
 }
 
+/* ✨ Animation base */
 .animation {
   animation-duration: 1s;
   animation-fill-mode: both;
@@ -22,11 +38,37 @@
   transition: all 1s;
 }
 
+.clip-path-menu {
+  clip-path: polygon(
+    20% 0%,
+    80% 0%,
+    100% 20%,
+    100% 80%,
+    80% 100%,
+    20% 100%,
+    0% 80%,
+    0% 20%
+  ) !important;
+  opacity: 25%;
+}
+.clip-path-menu:hover {
+  clip-path: polygon(
+    50% 0%,
+    90% 20%,
+    100% 60%,
+    75% 100%,
+    25% 100%,
+    0% 60%,
+    10% 20%
+  ) !important;
+  opacity: 100%;
+}
+
+/* Card flip effects */
 .front,
 .back {
   transform-style: preserve-3d;
   backface-visibility: hidden;
-
   transition: all 0.5s ease;
 }
 .back {
@@ -39,12 +81,14 @@
   transform: perspective(400px) rotateY(360deg);
 }
 
+/* Button shadow */
 .button {
   box-shadow: rgba(var(--green-line)) 0px 10px 50px;
 }
 
+/* Custom animations */
 .animation-behind {
-  animation-name: behind;
+  animation: behind 1s both 1s;
 }
 @keyframes behind {
   from {
@@ -57,15 +101,13 @@
   }
 }
 
+/* Rotating circles */
 .circle-r-1 {
-  animation: rotate-right 1s both;
-  animation-delay: 1s;
+  animation: rotate-right 1s both 1s;
 }
 .circle-r-2 {
-  animation: rotate-right-2 1s both;
-  animation-delay: 1s;
+  animation: rotate-right-2 1s both 1s;
 }
-
 @keyframes rotate-right {
   0% {
     transform: translateY(-3rem) translateX(0.2rem) rotate(150deg) scale(0.3);
@@ -74,7 +116,6 @@
     transform: translateY(-10rem) translateX(15rem) rotate(0deg) scale(1);
   }
 }
-
 @keyframes rotate-right-2 {
   0% {
     transform: translateY(-5rem) translateX(-2rem) rotate(150deg) scale(0.3);
@@ -84,13 +125,12 @@
   }
 }
 
+/* Left rotations */
 .circle-l-1 {
-  animation: rotate-left-1 1s both;
-  animation-delay: 1s;
+  animation: rotate-left-1 1s both 1s;
 }
 .circle-l-2 {
-  animation: rotate-left-2 1s both;
-  animation-delay: 1s;
+  animation: rotate-left-2 1s both 1s;
 }
 
 @keyframes rotate-left-1 {
@@ -112,57 +152,46 @@
   }
 }
 
+/* UI animations */
 .inventory,
 .logo {
-  animation: hidden 1s both;
-  animation-delay: 1s;
-  transition: all both;
+  animation: hidden 1s both 1s;
+  transition: all 1s;
 }
-
 .strip {
-  animation: strip-animation 1s both;
-  animation-delay: 1s;
-  transition: all both;
+  animation: strip-animation 1s both 1s;
+  transition: all 1s;
 }
-
 .bottom-animation {
-  animation: bottom-animation 1s both;
-  animation-delay: 1s;
-  transition: all both;
+  animation: bottom-animation 1s both 1s;
+  transition: all 1s;
 }
-
 .navigation-animate {
-  animation: nav-animate 1s both;
-  animation-delay: 1s;
-  transition: all both;
+  animation: nav-animate 1s both 1s;
+  transition: all 1s;
   transform-origin: bottom left;
 }
 
+/* Button animations */
 .btn-discover {
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-  animation: btn-width;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-delay: 1s;
+  animation: btn-width 1s both 1s;
   transition: all 1s;
-  div {
-    animation: btn 1s both;
-    animation-delay: 1s;
-    transition: all 1s;
-  }
+}
+.btn-discover div {
+  animation: btn 1s both 1s;
+  transition: all 1s;
 }
 
 @keyframes btn-width {
   from {
     width: 8rem;
-    @apply bottom-20;
+    bottom: 5rem; /* was @apply bottom-20 */
   }
   to {
     width: 13rem;
-    @apply bottom-40;
+    bottom: 10rem; /* was @apply bottom-40 */
   }
 }
-
 @keyframes btn {
   from {
     opacity: 0;
@@ -171,26 +200,23 @@
     opacity: 1;
   }
 }
-
 @keyframes nav-animate {
   from {
     transform: scale(0);
-    @apply bottom-0;
+    bottom: 0; /* was @apply bottom-0 */
   }
-
   to {
     transform: scale(1);
-    @apply bottom-10;
+    bottom: 2.5rem; /* was @apply bottom-10 */
   }
 }
 
+/* Other animations */
 .line-animation {
-  animation: line-animation 1s both;
-  animation-delay: 1s;
-  transition: all both;
+  animation: line-animation 1s both 1s;
+  transition: all 1s;
   transform-origin: top;
 }
-
 @keyframes line-animation {
   from {
     transform: scaleY(0.3);
@@ -199,7 +225,6 @@
     transform: scaleY(1);
   }
 }
-
 @keyframes bottom-animation {
   from {
     transform: scale(0);
@@ -208,111 +233,113 @@
     transform: scale(1);
   }
 }
-
 @keyframes hidden {
   from {
     opacity: 0;
-    @apply left-7;
+    left: 1.75rem; /* @apply left-7 */
   }
   to {
     opacity: 1;
-    @apply left-10;
+    left: 2.5rem; /* @apply left-10 */
   }
 }
-
 @keyframes strip-animation {
   from {
     opacity: 0;
-    @apply left-20 bottom-0;
+    left: 5rem; /* @apply left-20 */
+    bottom: 0;
   }
-
   to {
     opacity: 1;
-    @apply left-20 bottom-10;
+    left: 5rem; /* @apply left-20 */
+    bottom: 2.5rem; /* @apply bottom-10 */
   }
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
+/* 🌗 Base Layer (Theme) */
+@theme {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+  --radius: 0.5rem;
+  --font-display: "Press_Start_2P", system-ui;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
+.dark {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
 }
 
+/* 🧩 Component defaults */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+/* Scrollbar */
 .chatbot-scroll-ui {
   scrollbar-color: white black;
   scrollbar-width: thin;
 }
 
-/* Custom wallet button styles */
+/* Wallet button overrides */
 .wallet-adapter-button {
   background-color: #9333ea !important;
   border-radius: 0.5rem !important;
 }
-
 .wallet-adapter-button:hover {
   background-color: #7e22ce !important;
 }
 
+/* Number input no arrows */
 .no-number-arrows {
-  @apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+  appearance: textfield;
+}
+.no-number-arrows::-webkit-outer-spin-button,
+.no-number-arrows::-webkit-inner-spin-button {
+  appearance: none;
 }

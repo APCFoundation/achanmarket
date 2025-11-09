@@ -16,11 +16,11 @@ import {
   Navigation,
   Background,
   Vector,
-} from "@/components/landingPage";
+} from "@/features/landingPage";
 import dynamic from "next/dynamic";
-import Chatbot from "@/components/landingPage/chatbot/Chatbot";
+import Chatbot from "@/features/landingPage/chatbot/Chatbot";
 
-const Character = dynamic(() => import("@/components/landingPage/Character"), {
+const Character = dynamic(() => import("@/features/landingPage/Character"), {
   ssr: false,
 });
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -394,8 +394,8 @@ export default function Home() {
               id="desc"
               className="desc sm:w-1/2 w-full   flex flex-col justify-center items-start gap-3 font-tinos relative"
             >
-              <div className="w-full relative flex items-stretch justify-between flex-row ">
-                <div className="w-1 h-[92%]  bg-white rounded-full" />
+              <div className="w-full relative flex items-stretch justify-between  flex-row ">
+                <div className="w-1 h-[92%]  bg-white rounded-full " />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
                   Multi-Chain Trading, One Payment
                 </h1>

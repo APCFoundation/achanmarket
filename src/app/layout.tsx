@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import Provider from "@/components/Provider";
 import { headers } from "next/headers";
 import { Toaster } from "@/components/ui/sonner";
+import { Inter, Press_Start_2P } from "next/font/google";
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const pressFont = Press_Start_2P({
-  weight: ["400"],
+  weight: "400",
   subsets: ["latin"],
   variable: "--font-press-start-2p",
 });
@@ -27,10 +28,7 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="character.ico" sizes="any" />
       </head>
-      <body
-        className={` ${inter.variable} ${pressFont.variable} `}
-        suppressHydrationWarning
-      >
+      <body className={` ${inter.variable} ${pressFont.variable} `}>
         <Provider cookies={cookies}>
           <Toaster richColors />
           <main>{children}</main>
