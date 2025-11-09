@@ -68,19 +68,7 @@ const config: Config = {
       },
     },
   },
-  safelist: [
-    "sm:-bottom-[40rem]",
-    "-bottom-[30rem]",
-    "sm:-bottom-[10rem]",
-    "-bottom-[5rem]",
-    "sm:-bottom-[45rem]",
-    "-bottom-[35rem]",
-    "-left-20",
-    "w-[41rem]",
-    "sm:w-[40rem]",
-    "w-[60rem]",
-    "w-[40rem]",
-  ],
+
   plugins: [animate],
 };
 
