@@ -9,11 +9,13 @@ export default function Page() {
     <div className="min-h-screen pb-10 bg-purple-200">
       <NavigationMenu />
       <div className={`flex gap-5 justify-center pl-4 pr-4 pt-2`}>
-        <div className={` w-3/4`}>
+        <div className={` w-3/4 space-y-8`}>
           {/* Trending NFT components */}
           <TrendingNFTCarousel />
-          {/* Trending Yappers */}
-          <TrendingYappers />
+          <div className={"flex flex-col"}>
+            <h1 className={` font-press text-2xl`}>Trending Yappers</h1>
+            <TrendingYappers />
+          </div>
         </div>
         <div
           className={`sticky top-16 bg-red-400 border border-black rounded-2xl w-1/4 h-[33  rem] shadow-[10px_10px_0px_0_rgba(0,0,0,1)]`}
