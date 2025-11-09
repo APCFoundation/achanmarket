@@ -16,7 +16,7 @@ export default function Navbar() {
   const isClient = useHydrate();
   const { open } = useAppKit();
   return (
-    <div className="w-full py-4 px-3 bg-black text-white flex items-center justify-between gap-3 font-press">
+    <div className="w-full py-4 px-3 bg-black text-white flex items-center justify-between gap-3 font-press sticky top-0 z-[99]">
       <div className={"flex gap-3 "}>
         <Link
           href={"/dashboard"}

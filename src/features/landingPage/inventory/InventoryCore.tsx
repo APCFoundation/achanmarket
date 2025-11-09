@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ConnectButton } from "../../ConnectButton";
+import { ConnectButton } from "../../../components/ConnectButton";
 import Inventory from "./Inventory";
 import { useGSAP } from "@gsap/react";
 import useHydrate from "@/hook/useHydrate";

@@ -16,7 +16,7 @@ import "ldrs/react/Square.css";
 import { toast } from "sonner";
 import Link from "next/link";
 import { MultiStepLoader } from "@/components/ui/multi-step-loader-custom";
-import { SwitchChain } from "@/components/dashboard/createpage";
+import { SwitchChain } from "@/features/dashboard/createpage";
 import hashObject from "@/lib/hashObject";
 const NETWORK_IDS: Record<string, number> = {
   base: 8453, // Base mainnet
