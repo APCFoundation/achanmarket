@@ -1,9 +1,8 @@
 "use client";
 
 import TrendingNFTCarousel from "@/features/dashboard/components/TrendingNFT";
-import TrendingNFT from "@/features/dashboard/components/TrendingNFT";
 import TrendingYappers from "@/features/dashboard/components/TrendingYappers";
-
+import TopSection from "@/features/top-sections";
 export default function Page() {
   return (
     <div className="min-h-screen pb-10 bg-purple-200">
@@ -18,9 +17,10 @@ export default function Page() {
           </div>
         </div>
         <div
-          className={`sticky top-16 bg-red-400 border border-black rounded-2xl w-1/4 h-[33  rem] shadow-[10px_10px_0px_0_rgba(0,0,0,1)]`}
+          className={`sticky top-16 bg-red-400 border  overflow-y-auto border-black rounded-2xl w-1/4 h-132 overflow-hidden shadow-[10px_10px_0px_0_rgba(0,0,0,1)] custom-scroll-top-sections`}
         >
           {/* collection */}
+          <TopSection />
         </div>
       </div>
     </div>

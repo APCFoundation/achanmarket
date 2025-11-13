@@ -18,6 +18,8 @@ import Link from "next/link";
 import { MultiStepLoader } from "@/components/ui/multi-step-loader-custom";
 import { SwitchChain } from "@/features/dashboard/createpage";
 import hashObject from "@/lib/hashObject";
+import { FormState } from "@/features/create-collections/types";
+import HeaderClearForm from "@/features/create-collections/components/HeaderClearForm";
 const NETWORK_IDS: Record<string, number> = {
   base: 8453, // Base mainnet
   ethereum: 1, // Ethereum mainnet
@@ -32,20 +34,6 @@ const NETWORK_IDS: Record<string, number> = {
 
 const MARKETPLACE_CONTRACT_ADDRESS = process.env
   .MARKETPLACE_CONTRACT_ADDRESS as Address;
-
-type FormState = {
-  selectedChain: string;
-  name: string;
-  symbol: string;
-  description: string;
-  mintPrice: number | "";
-  royaltyFee: number | "";
-  maxSupply: number | "";
-  limitPerWallet: number | "";
-  collectionFile?: File | null;
-  artType: "same" | "unique";
-  artworkFile: File | null;
-};
 
 export default function Component() {
   const [form, setForm] = useState<FormState>({
@@ -74,7 +62,7 @@ export default function Component() {
     artType,
     artworkFile,
   } = form;
-  const { caipNetwork } = useAppKitNetwork();
+  const { caipNetwork, chainId } = useAppKitNetwork();
   const { writeContractAsync } = useWriteContract({ config });
   const { switchChain } = useSwitchChain({ config });
   const [uploading, setUploading] = useState(false);
@@ -670,16 +658,37 @@ export default function Component() {
   );
 }
 
-const HeaderClearForm = ({ clearForm }: { clearForm: () => void }) => {
-  return (
-    <div className="flex justify-end mb-8 ">
-      <button
-        onClick={clearForm}
-        className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1"
-      >
-        <X className="w-4 h-4" />
-        Clear Form
-      </button>
-    </div>
-  );
-};
+// const FormSection = () => {
+//   return (
+//     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//       <div className="space-y-2">
+//         <Label htmlFor="name" className="text-black font-medium">
+//           Name <span className="text-red-500">*</span>
+//         </Label>
+//         <Input
+//           id="name"
+//           value={name}
+//           onChange={(e) =>
+//             setForm((prev) => ({ ...prev, name: e.target.value }))
+//           }
+//           className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+//           placeholder="The Pond"
+//         />
+//       </div>
+//       <div className="space-y-2">
+//         <Label htmlFor="symbol" className="text-black font-medium">
+//           Symbol <span className="text-red-500">*</span>
+//         </Label>
+//         <Input
+//           id="symbol"
+//           value={symbol}
+//           onChange={(e) =>
+//             setForm((prev) => ({ ...prev, symbol: e.target.value }))
+//           }
+//           className="bg-white border-gray-300 text-black placeholder:text-gray-500"
+//           placeholder="POND"
+//         />
+//       </div>
+//     </div>
+//   );
+// };
