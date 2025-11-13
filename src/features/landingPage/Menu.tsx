@@ -18,16 +18,7 @@ const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
   }, [isMenuClicked]);
   return (
     <div>
-      <div
-        style={{
-          // Sisi kiri miring: kiri atas turun sedikit, kiri bawah naik sedikit
-          clipPath: "polygon(50% 0, 100% 0%, 100% 100%, 0 100%)",
-          boxShadow: "0 0 32px 0 rgba(0,0,0,0.3)",
-        }}
-        className={`green-line bg-lime-400 w-[3rem] h-full fixed translate-x-[100%] top-0 bottom-0 ${
-          isMenuClicked ? "right-0" : "right-0"
-        } z-[99]`}
-      ></div>
+      {/* <GreenLine isMenuClicked={isMenuClicked} /> */}
       <div
         id="navigation"
         className="navigation fixed top-0 bottom-0 right-0 translate-x-[100%] w-1/3 h-full z-[99] pointer-events-auto flex  justify-center"
@@ -62,4 +53,18 @@ const Menu = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
   );
 };
 
+const GreenLine = ({ isMenuClicked }: { isMenuClicked: boolean }) => {
+  return (
+    <div
+      style={{
+        // Sisi kiri miring: kiri atas turun sedikit, kiri bawah naik sedikit
+        clipPath: "polygon(50% 0, 100% 0%, 100% 100%, 0 100%)",
+        boxShadow: "0 0 32px 0 rgba(0,0,0,0.3)",
+      }}
+      className={`green-line bg-lime-400 w-[3rem] h-full fixed translate-x-[100%] top-0 bottom-0 ${
+        isMenuClicked ? "right-0" : "right-0"
+      } z-[99]`}
+    ></div>
+  );
+};
 export default Menu;

@@ -5,10 +5,10 @@ const Navigation = () => {
   return (
     <div className="navigation-animate  absolute flex font-bold  justify-center  w-[30rem] bg-white text-black">
       <Link
-        href={"/"}
+        href={"/dashboard"}
         className="py-5 px-5 transition-all duration-500 origin-bottom hover:bg-gray-300 cursor-pointer"
       >
-        Home
+        App
       </Link>
       <Link
         href={"/whitepaper"}

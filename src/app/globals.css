@@ -38,6 +38,10 @@
   transition: all 1s;
 }
 
+.custom-scroll-top-sections {
+  scrollbar-width: none;
+}
+
 .clip-path-menu {
   clip-path: polygon(
     20% 0%,
