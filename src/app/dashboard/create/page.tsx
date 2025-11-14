@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +26,12 @@ import { SwitchChain } from "@/features/dashboard/createpage";
 import hashObject from "@/lib/hashObject";
 import { FormState } from "@/features/create-collections/types";
 import HeaderClearForm from "@/features/create-collections/components/HeaderClearForm";
+import {
+  DescriptionFields,
+  Fields,
+  CollectionSection,
+  FormSection,
+} from "@/features/create-collections/components/FormControl";
 const NETWORK_IDS: Record<string, number> = {
   base: 8453, // Base mainnet
   ethereum: 1, // Ethereum mainnet
@@ -286,191 +298,102 @@ export default function Component() {
             />
 
             {/* Name and Symbol */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-black font-medium">
-                  Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
-                  placeholder="The Pond"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="symbol" className="text-black font-medium">
-                  Symbol <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="symbol"
-                  value={symbol}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, symbol: e.target.value }))
-                  }
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500"
-                  placeholder="POND"
-                />
-              </div>
-            </div>
+            <FormSection>
+              <Fields
+                name="Name"
+                id="name"
+                value={name}
+                placeholder="The Pond"
+                type="text"
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+              />
+              <Fields
+                name="Symbol"
+                id="symbol"
+                value={symbol}
+                placeholder="Pond"
+                type="text"
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+              />
+            </FormSection>
             {/* price and royaltie */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="mintPrice" className="text-black font-medium">
-                  Mint Price <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="mintPrice"
-                  value={mintPrice}
-                  type="number"
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows "
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setForm((prev) => ({
-                      ...prev,
-                      mintPrice: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="royaltyFee" className="text-black font-medium">
-                  Royalty Fee <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="royaltyFee"
-                  value={royaltyFee}
-                  type="number"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setForm((prev) => ({
-                      ...prev,
-                      royaltyFee: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
-                />
-              </div>
-            </div>
+            <FormSection>
+              <Fields
+                name={"Mint Price"}
+                id="mintPrice"
+                value={mintPrice}
+                placeholder="0.01"
+                type={"number"}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    mintPrice: val === "" ? "" : Number(val),
+                  }));
+                }}
+              />
+              <Fields
+                name={"Royalty Fee"}
+                id="royaltyFee"
+                value={royaltyFee}
+                type={"number"}
+                placeholder={"10-100"}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    royaltyFee: val === "" ? "" : Number(val),
+                  }));
+                }}
+              />
+            </FormSection>
             {/* Max supply & Mint Limit per Wallet */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="MaxSupply" className="text-black font-medium">
-                  Max Supply <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="MaxSupply"
-                  value={maxSupply}
-                  type="number"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setForm((prev) => ({
-                      ...prev,
-                      maxSupply: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="limit" className="text-black font-medium">
-                  Max Limit per Wallet <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="limit"
-                  value={limitPerWallet}
-                  type="number"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setForm((prev) => ({
-                      ...prev,
-                      limitPerWallet: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 no-number-arrows"
-                />
-              </div>
-            </div>
+            <FormSection>
+              <Fields
+                id="MaxSupply"
+                value={maxSupply}
+                name="Max Supply"
+                type="number"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    maxSupply: val === "" ? "" : Number(val),
+                  }));
+                }}
+              />
+              <Fields
+                id="limit"
+                name="Max Limit per Wallet"
+                value={limitPerWallet}
+                type="number"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    limitPerWallet: val === "" ? "" : Number(val),
+                  }));
+                }}
+              />
+            </FormSection>
 
             {/* Collection Image */}
-            <div className="space-y-2">
-              <Label className="text-black font-medium">Collection Image</Label>
-              <p className="text-sm text-gray-600">
-                Image that will be shown as the main image for the collection.
-                Recommended: 800×800px jpg
-              </p>
-
-              <div className="mt-4">
-                {collectionFile ? (
-                  <div className="border-2 border-gray-300 border-dashed rounded-lg p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Upload className="w-6 h-6 text-gray-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-black">
-                            {collectionFile.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {(collectionFile.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={removeFile}
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    {...getCollectionRootProps()}
-                    className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
-                      isCollectionDragActive
-                        ? "border-blue-400 bg-blue-50"
-                        : "border-gray-300 hover:border-gray-400"
-                    }`}
-                  >
-                    <input {...getCollectionInputProps()} />
-                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-4">
-                      {isCollectionDragActive
-                        ? "Drop the files here..."
-                        : "Drop your artwork here to upload"}
-                    </p>
-                    <Button
-                      variant="outline"
-                      className="bg-white border-gray-300 text-black hover:bg-gray-50"
-                    >
-                      Choose Image...
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
+            <CollectionSection
+              collectionFile={collectionFile}
+              onDropCollection={onDropCollection}
+              removeCollectionFile={removeFile}
+            />
             {/* description */}
-            <div className="flex flex-col gap-3">
-              <Label className="text-black font-medium">Description</Label>
-              <textarea
-                name="description"
-                id="description-1"
-                value={description}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, description: e.target.value }))
-                }
-                className="px-2 py-3  border-gray-300 border-2"
-                cols={30}
-                rows={10}
-              ></textarea>
-            </div>
+            <DescriptionFields
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, description: e.target.value }))
+              }
+              value={description}
+            />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left side - Art type selection */}
               <div className="space-y-3">
@@ -657,38 +580,3 @@ export default function Component() {
     </div>
   );
 }
-
-// const FormSection = () => {
-//   return (
-//     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//       <div className="space-y-2">
-//         <Label htmlFor="name" className="text-black font-medium">
-//           Name <span className="text-red-500">*</span>
-//         </Label>
-//         <Input
-//           id="name"
-//           value={name}
-//           onChange={(e) =>
-//             setForm((prev) => ({ ...prev, name: e.target.value }))
-//           }
-//           className="bg-white border-gray-300 text-black placeholder:text-gray-500"
-//           placeholder="The Pond"
-//         />
-//       </div>
-//       <div className="space-y-2">
-//         <Label htmlFor="symbol" className="text-black font-medium">
-//           Symbol <span className="text-red-500">*</span>
-//         </Label>
-//         <Input
-//           id="symbol"
-//           value={symbol}
-//           onChange={(e) =>
-//             setForm((prev) => ({ ...prev, symbol: e.target.value }))
-//           }
-//           className="bg-white border-gray-300 text-black placeholder:text-gray-500"
-//           placeholder="POND"
-//         />
-//       </div>
-//     </div>
-//   );
-// };
