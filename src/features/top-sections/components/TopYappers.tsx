@@ -1,10 +1,10 @@
-export default function TopCollectionTable({
+const TopYappers = ({
   formatTable,
   data,
 }: {
   formatTable: "table" | "compact";
   data: string;
-}) {
+}) => {
   return formatTable === "table" ? (
     <>
       {Array.from({ length: 20 }, (_, i) => (
@@ -17,4 +17,6 @@ export default function TopCollectionTable({
       ))}
     </>
   ) : null;
-}
+};
+
+export default TopYappers;

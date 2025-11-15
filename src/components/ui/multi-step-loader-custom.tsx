@@ -62,12 +62,12 @@ const LoaderCore = ({
           >
             <div>
               {index > currentState && (
-                <CheckIcon className="text-black dark:text-white" />
+                <CheckIcon className="text-black dark:text-black" />
               )}
               {index <= currentState && (
                 <CheckFilled
                   className={cn(
-                    "text-black dark:text-white",
+                    "text-black dark:text-black",
                     currentState === index &&
                       "text-black dark:text-lime-500 opacity-100"
                   )}
@@ -76,7 +76,7 @@ const LoaderCore = ({
             </div>
             <span
               className={cn(
-                "text-black dark:text-white",
+                "text-black dark:text-black",
                 currentState === index &&
                   "text-black dark:text-lime-500 opacity-100"
               )}

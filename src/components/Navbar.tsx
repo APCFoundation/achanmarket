@@ -25,9 +25,9 @@ export default function Navbar() {
           <span>A-chan Market</span>
         </Link>
         <div className="flex items-center gap-5 ">
-          <Link href={`/trade`}>Trade</Link>
-          <Link href={`/mint`}>Mint</Link>
-          <Link href={`/create`}>Create</Link>
+          <Link href={`/dashboard/trade`}>Trade</Link>
+          <Link href={`/dashboard/mint`}>Mint</Link>
+          <Link href={`/dashboard/create`}>Create</Link>
         </div>
       </div>
       <div>

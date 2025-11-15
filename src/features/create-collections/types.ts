@@ -26,7 +26,7 @@ export type FieldsProps = {
 
 export type DescriptionFieldsProps = {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  setForm: React.Dispatch<React.SetStateAction<FormState>>;
 };
 
 export type CollectionSectionProps = {
@@ -34,4 +34,12 @@ export type CollectionSectionProps = {
   removeCollectionFile: () => void;
   onDropCollection: (acceptedFiles: File[]) => void;
   collectionFile: File | null | undefined;
+};
+
+export type ArtTypeSelectorProps = {
+  artType: "same" | "unique";
+  setForm: React.Dispatch<React.SetStateAction<FormState>>;
+  onDropArtwork: (acceptedFiles: File[]) => void;
+  removeArtworkFile: () => void;
+  artworkFile: File | null;
 };
