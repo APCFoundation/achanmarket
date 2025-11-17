@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ConnectButton } from "../../../components/ConnectButton";
+import { ConnectButton } from "../../../../components/ConnectButton";
 import Inventory from "./Inventory";
 import { useGSAP } from "@gsap/react";
 import useHydrate from "@/hook/useHydrate";
 import gsap from "gsap";
 import { useAccount } from "wagmi";
-import { shortenAddress } from "@/lib/shortenAddress";
+import { shortenAddress } from "@/utils/shortenAddress";
 import { useAppKit } from "@reown/appkit/react";
 import { useQuery } from "@tanstack/react-query";
 import { NftData } from "@/lib/type";

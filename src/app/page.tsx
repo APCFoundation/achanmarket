@@ -16,13 +16,17 @@ import {
   Navigation,
   Background,
   Vector,
-} from "@/features/landingPage";
+} from "@/features/landingPage/components";
 import dynamic from "next/dynamic";
-import Chatbot from "@/features/landingPage/chatbot/Chatbot";
+import Chatbot from "@/features/landingPage/components/chatbot/Chatbot";
+import { featureSection } from "./a";
 
-const Character = dynamic(() => import("@/features/landingPage/Character"), {
-  ssr: false,
-});
+const Character = dynamic(
+  () => import("@/features/landingPage/components/Character"),
+  {
+    ssr: false,
+  }
+);
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function Home() {
@@ -349,21 +353,22 @@ export default function Home() {
               <div className="w-full relative flex items-stretch justify-between flex-row ">
                 <div className="w-1 h-[92%]  bg-white rounded-full" />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
-                  Achan Market is marketplace for trade NFT
+                  {featureSection[0].title}
                 </h1>
               </div>
               <div className="w-full flex flex-row justify-between items-stretch text-[1vw]  font-semibold  text-balance">
                 <div className="w-1 h-[92%] mt-[0.5vw]  bg-transparent rounded-full" />
                 <div className="w-[89%] text-[3.5vw] sm:text-[2vw] md:text-[1vw]   sm:pr-[3vw] ">
-                  You can trade nft in any chain and any collection.
+                  {featureSection[0].description}
                 </div>
               </div>
             </section>
+
             <section className="image sm:w-1/2 w-full  sm:px-[2vw] flex flex-row flex-none  flex-nowrap gap-[3vw] sm:gap-[4vw]  ">
               <div className="size-[80vw] sm:size-[42vw] md:size-[35vw] flex  flex-none  rounded-full bg-white overflow-hidden relative">
                 <div className="size-full flex justify-center items-center absolute inset-0">
                   <Image
-                    src={"/overview/cintaku.png"}
+                    src={featureSection[0].image}
                     width={240}
                     height={240}
                     alt="shoes"
@@ -381,10 +386,10 @@ export default function Home() {
               <div className="size-[80vw] sm:size-[42vw] md:size-[35vw] flex  flex-none  rounded-full bg-white overflow-hidden relative">
                 <div className="size-full flex justify-center items-center absolute inset-0">
                   <Image
-                    src={"/overview/1.png"}
+                    src={featureSection[1].image}
                     width={240}
                     height={240}
-                    alt="bottle nft"
+                    alt={featureSection[1].title}
                     className=" absolute "
                   />
                 </div>
@@ -397,16 +402,13 @@ export default function Home() {
               <div className="w-full relative flex items-stretch justify-between  flex-row ">
                 <div className="w-1 h-[92%]  bg-white rounded-full " />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
-                  Multi-Chain Trading, One Payment
+                  {featureSection[1].title}
                 </h1>
               </div>
               <div className="w-full flex flex-row justify-between items-stretch text-[1vw]  font-semibold  text-balance">
                 <div className="w-1 h-[92%] mt-[0.5vw]  bg-transparent rounded-full" />
                 <div className="w-[89%] text-[3.5vw] sm:text-[2vw] md:text-[1vw]   sm:pr-[3vw] ">
-                  No need to switch networks. Just pay with the chain you
-                  already use, and we’ll handle the bridging and transactions
-                  behind the scenes. Buying NFTs or tokens across chains is now
-                  as simple as one click.
+                  {featureSection[1].description}
                 </div>
               </div>
             </section>
@@ -420,16 +422,13 @@ export default function Home() {
               <div className="w-full relative flex items-stretch justify-between flex-row ">
                 <div className="w-1 h-[92%]  bg-white rounded-full" />
                 <h1 className="w-[89%]  h-full pr-[3vw]   flex flex-col font-bold md:text-[2.5vw] sm:text-[5vw] text-[8vw] text-balance ">
-                  Anime UI is web for trade NFT
+                  {featureSection[2].title}
                 </h1>
               </div>
               <div className="w-full flex flex-row justify-between items-stretch text-[1vw]  font-semibold  text-balance">
                 <div className="w-1 h-[92%] mt-[0.5vw]  bg-transparent rounded-full" />
                 <div className="w-[89%] text-[3.5vw] sm:text-[2vw] md:text-[1vw]   sm:pr-[3vw] ">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-                  adipisci id facere dicta culpa asperiores natus non nihil
-                  saepe quasi itaque officiis sunt cupiditate quam reiciendis
-                  similique, dolores aspernatur voluptas?
+                  {featureSection[2].description}
                 </div>
               </div>
             </section>
@@ -437,10 +436,10 @@ export default function Home() {
               <div className="size-[80vw] sm:size-[42vw] md:size-[35vw] flex  flex-none  rounded-full bg-white overflow-hidden relative">
                 <div className="size-full flex justify-center items-center absolute inset-0">
                   <Image
-                    src={"/overview/2.png"}
+                    src={featureSection[2].image}
                     width={240}
                     height={240}
-                    alt="character"
+                    alt={featureSection[2].title}
                     className=" absolute "
                   />
                 </div>

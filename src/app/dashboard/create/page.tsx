@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { abiNFTMarketplaceFactory } from "@/abi.js";
-import { Address, parseEther } from "viem";
-import { Upload, X, Check, ExternalLink } from "lucide-react";
+import { Address } from "viem";
+import { ExternalLink } from "lucide-react";
 import { useAppKitNetwork } from "@reown/appkit/react";
 import { useSwitchChain, useWriteContract } from "wagmi";
 import { config } from "@/lib";
@@ -13,7 +12,6 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { MultiStepLoader } from "@/components/ui/multi-step-loader-custom";
 import SwitchChain from "@/features/create-collections/components/SwitchChain";
-import hashObject from "@/lib/hashObject";
 import { FormState } from "@/features/create-collections/types";
 import HeaderClearForm from "@/features/create-collections/components/HeaderClearForm";
 import {

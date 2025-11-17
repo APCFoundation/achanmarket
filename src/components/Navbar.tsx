@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useSignMessage } from "wagmi";
 import useHydrate from "@/hook/useHydrate";
-import { shortenAddress } from "@/lib/shortenAddress";
+import { shortenAddress } from "@/utils/shortenAddress";
 import { useAppKit } from "@reown/appkit/react";
 export default function Navbar() {
   const { address, isConnected } = useAccount({});

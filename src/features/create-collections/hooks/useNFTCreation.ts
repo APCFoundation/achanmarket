@@ -5,7 +5,7 @@ import { config } from "@/lib";
 import { abiNFTMarketplaceFactory } from "@/abi.js";
 import { toast } from "sonner";
 import { FormState } from "../types";
-import hashObject from "@/lib/hashObject";
+import hashObject from "@/utils/hashObject";
 export const useNFTCreation = ({
   contractAddress,
 }: {
