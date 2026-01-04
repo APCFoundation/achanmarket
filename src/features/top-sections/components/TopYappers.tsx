@@ -1,10 +1,11 @@
-const TopYappers = ({
-  formatTable,
-  data,
-}: {
+import { YapperWithChart } from "@/lib/type";
+
+interface TopYappersProps {
   formatTable: "table" | "compact";
-  data: string;
-}) => {
+  data: YapperWithChart[];
+}
+const TopYappers = (props: TopYappersProps) => {
+  const { formatTable } = props;
   return formatTable === "table" ? (
     <>
       {Array.from({ length: 20 }, (_, i) => (
@@ -12,7 +13,7 @@ const TopYappers = ({
           key={i}
           className="w-full h-12 bg-black border border-white text-white"
         >
-          Eweee
+          Yapper here
         </div>
       ))}
     </>

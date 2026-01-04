@@ -1,4 +1,4 @@
-export type TopCollection = {
+export interface TopCollection {
   id: string;
   name: string;
   image: string;
@@ -7,7 +7,7 @@ export type TopCollection = {
   symbol: string;
 };
 
-export type TopCreator = {
+export interface TopCreator {
   id: string;
   name: string;
   avatar: string;
@@ -15,7 +15,7 @@ export type TopCreator = {
   followers: number;
 };
 
-export type TopLaunch = {
+export interface TopLaunch  {
   id: string;
   name: string;
   image: string;
@@ -28,14 +28,21 @@ export type TypeSection = "collection" | "Yapper";
 
 export type FormatTable = "table" | "compact";
 
-export type Collections = {
-  imageUrl: string;
-  name: string;
-  isVerified: boolean;
-  floorPrice: string;
-  chains: string;
-  prevFloorPrice1d: string;
-  prevFloorPrice3d: string;
-  prevFloorPrice5d: string;
-  prevFloorPrice30d: string;
-}[];
+
+
+export interface TopCollectionItem {
+  id: string;                     // unique identifier
+  name: string;                   // "Azuki"
+  imageUrl: string;               // thumbnail image URL
+  chain: {
+    name: string;                 // "ethereum", "base", etc.
+    iconUrl: string;              // small chain icon shown on the bottom-left
+  };
+  verified: boolean;              // whether blue-check is shown
+  price: {
+    value: number;                // 3, 320
+    currency: string;             // "ETH", "HYPE"
+  };
+  change24h: number;              // 108 means +108%
+}
+

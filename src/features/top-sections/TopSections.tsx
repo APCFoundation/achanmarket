@@ -1,13 +1,10 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
-import SectionNavbar from "./components/SectionNavbar";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTopCollection } from "./hooks/useTopCollection";
-import { useTopYappers } from "./hooks/useTopYappers";
+import useTrendingYappers from "@/hook/useTrendingYappers";
 import { useTopLaunch } from "./hooks/useTopLaunch";
-import CompactTable from "./components/CompactTable";
 import TopCollectionTable from "./components/TopCollectionTable";
-import TopLaunchTable from "./components/TopLaunchTable";
-import { TypeSection, FormatTable } from "./types";
+import { FormatTable } from "./types";
 import { TableCompactIcon, TableIcon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 
@@ -28,17 +25,19 @@ type TopSectionsProps = {
 export default function TopSections(props: TopSectionsProps) {
   const { isCollapsed, setIsCollapsed } = props;
   const [isCollection, setIsCollection] = useState(true);
-  const [type, setType] = useState<TypeSection>("collection");
   const [formatTable, setFormatTable] = useState<FormatTable>("table");
 
   const { data: collections } = useTopCollection();
-  const { data: yappers } = useTopYappers();
+  const { data: yappers } = useTrendingYappers();
   const { data: launches } = useTopLaunch();
 
+  useEffect(() => {
+    console.log(isCollection);
+  }, [isCollection]);
   return (
     <div className="space-y-8 p-2 ">
       {/* Navigation */}
-      <div className="w-full py-1 flex justify-between items-center text-white bg-red-300 text-[0.4rem] sticky top-0 font-press">
+      <div className="w-full py-1 flex justify-between items-center text-white bg-white-custom text-[0.4rem] sticky top-0 font-press z-50">
         <div className="flex gap-3 ">
           <Button
             onClick={() => setIsCollection(true)}
@@ -54,9 +53,6 @@ export default function TopSections(props: TopSectionsProps) {
           </Button>
         </div>
         <div className="flex gap-3 ">
-          {/* <div className="size-10 bg-black border border-white flex justify-center items-center">
-            {"1d >"}
-          </div> */}
           <SelectDay />
           <div
             onClick={() =>
@@ -75,7 +71,7 @@ export default function TopSections(props: TopSectionsProps) {
         </div>
       </div>
       {/* Top Yappers | Top Collection */}
-      <div className="w-full flex flex-col gap-4 ">
+      <div className="w-full flex flex-col gap-2 ">
         {isCollection ? (
           <TopCollectionTable data={collections} formatTable={formatTable} />
         ) : (
@@ -89,10 +85,10 @@ export default function TopSections(props: TopSectionsProps) {
 export function SelectDay() {
   return (
     <Select>
-      <SelectTrigger className="size-10 px-0 bg-black border border-white flex justify-center items-center placeholder:text-[0.4rem] text-[0.4rem]">
-        <SelectValue placeholder="1d" />
+      <SelectTrigger className="size-10 px-0 bg-black border  border-white flex justify-center items-center placeholder:text-[0.4rem] text-[0.4rem] placeholder:text-white">
+        <SelectValue placeholder="1d" className="placeholder:text-white" />
       </SelectTrigger>
-      <SelectContent className="">
+      <SelectContent className="bg-black text-white placeholder:text-white">
         <SelectGroup>
           <SelectLabel>day</SelectLabel>
           <SelectItem value="1d">1d</SelectItem>

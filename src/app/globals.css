@@ -288,6 +288,7 @@
   --chart-5: 27 87% 67%;
   --radius: 0.5rem;
   --font-display: "Press_Start_2P", system-ui;
+  --color-white-custom: #f3fcf0;
 }
 
 .dark {

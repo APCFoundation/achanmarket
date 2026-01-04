@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Address } from "viem";
 import { ExternalLink } from "lucide-react";
 import { useAppKitNetwork } from "@reown/appkit/react";
-import { useSwitchChain, useWriteContract } from "wagmi";
+import { useSwitchChain, useWriteContract, useAccount } from "wagmi";
 import { config } from "@/lib";
 import { Square } from "ldrs/react";
 import "ldrs/react/Square.css";
@@ -21,6 +21,7 @@ import {
   FormSection,
   ArtTypeSelector,
 } from "@/features/create-collections/components/FormControl";
+import useHydrate from "@/hook/useHydrate";
 import { useNFTCreation } from "@/features/create-collections/hooks/useNFTCreation";
 const NETWORK_IDS: Record<string, number> = {
   base: 8453, // Base mainnet
@@ -66,12 +67,14 @@ export default function Component() {
   } = form;
   const { caipNetwork } = useAppKitNetwork();
   const { switchChain } = useSwitchChain({ config });
+  const hydrate = useHydrate();
+  const { address } = useAccount();
 
-  const {
-    createCollection,
-    currentStep: step,
-    uploading: loading,
-  } = useNFTCreation({ contractAddress: MARKETPLACE_CONTRACT_ADDRESS });
+  const nftCreation = useNFTCreation({
+    contractAddress: MARKETPLACE_CONTRACT_ADDRESS,
+    addressUser: address!,
+  });
+
   const onDropCollection = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setForm((prev) => ({ ...prev, collectionFile: acceptedFiles[0] }));
@@ -116,7 +119,7 @@ export default function Component() {
   ];
 
   const submitHandle = async () => {
-    createCollection(form, (tx) => {
+    nftCreation!.createCollection(form, (tx) => {
       toast.success("🎉 NFT created successfully!", {
         position: "top-center",
         description: (
@@ -155,8 +158,8 @@ export default function Component() {
     <div className={""}>
       <MultiStepLoader
         loadingStates={loadingStates}
-        loading={loading}
-        currentStep={step}
+        loading={nftCreation?.uploading!}
+        currentStep={nftCreation?.currentStep}
       />
       <div className="min-h-screen bg-white p-6 font-press">
         <div className="max-w-2xl mx-auto">
@@ -273,10 +276,10 @@ export default function Component() {
           </div>
           <button
             onClick={submitHandle}
-            disabled={loading}
+            disabled={nftCreation?.uploading}
             className="w-full flex justify-center items-center  bg-lime-500 py-5 mt-5 text-center text-black font-press cursor-pointer "
           >
-            {loading ? (
+            {nftCreation?.uploading ? (
               <Square
                 size="20"
                 stroke="5"
