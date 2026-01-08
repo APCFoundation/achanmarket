@@ -11,13 +11,13 @@ import {
   bsc,
 } from "wagmi/chains";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { cookieStorage, createStorage } from "wagmi";
+import { cookieStorage, createStorage } from "@wagmi/core";
+
 const networks = [
   mainnet,
   arbitrum,
   polygon,
   optimism,
-
   base,
   sepolia,
   berachain,
@@ -39,6 +39,7 @@ const metadata = {
 
 const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({ storage: cookieStorage }),
+  // storage: {},
   networks,
   projectId,
   chains: [
