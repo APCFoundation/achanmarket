@@ -20,6 +20,8 @@ import {
 import dynamic from "next/dynamic";
 import Chatbot from "@/features/landingPage/components/chatbot/Chatbot";
 import { featureSection } from "./a";
+import FooterSection from "./sections/FooterSection";
+import FeaturesSections from "./sections/FeaturesSections";
 
 const Character = dynamic(
   () => import("@/features/landingPage/components/Character"),
@@ -30,8 +32,6 @@ const Character = dynamic(
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function LandingPage() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const featuresTextRef = useRef<HTMLDivElement>(null);
   const initialText = "TEXT BERJALAN"; // Simpan teks awal
   const textIsHover = "YOU RIGHT"; // Simpan teks awal
   const [textScroll, setTextScroll] = useState(initialText);
@@ -167,17 +167,6 @@ export default function LandingPage() {
         );
       }
     });
-
-    gsap.to(headerRef.current, {
-      scrollTrigger: {
-        trigger: headerRef.current,
-        pin: true,
-        scrub: 1,
-        start: "top top",
-        end: "+=450px top",
-        // markers: true,
-      },
-    });
   });
 
   // is menu click
@@ -274,7 +263,7 @@ export default function LandingPage() {
   }, [isMenuClicked]);
   const images = ["/char7.png", "/char6.png", "/char5.png", "/char4.png"];
   return (
-    <div id="main" className="w-full h-[1000vh] font-inter ">
+    <div id="main" className="w-full  font-inter ">
       {/* menu */}
       <Menu isMenuClicked={isMenuClicked} />
       {/* Chatbot */}
@@ -450,25 +439,8 @@ export default function LandingPage() {
         </div>
       </Section>
       {/* features */}
-      <Section id="features" className="w-full h-screen   relative z-[90]">
-        <header
-          ref={headerRef}
-          className="w-full   select-none cursor-pointer px-5 pt-10 pb-32  "
-        >
-          <h1 ref={featuresTextRef} className="font-press text-[3vw]  w-2/4">
-            Features that be exist soon
-          </h1>
-        </header>
-        <div className="">
-          <Image
-            alt="shoes"
-            src={"/overview/0.png"}
-            width={200}
-            height={200}
-            className="right-[20vw] absolute"
-          />
-        </div>
-      </Section>
+      <FeaturesSections />
+      <FooterSection />
     </div>
   );
 }

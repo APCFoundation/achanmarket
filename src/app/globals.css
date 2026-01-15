@@ -189,11 +189,11 @@
 @keyframes btn-width {
   from {
     width: 8rem;
-    bottom: 5rem; /* was @apply bottom-20 */
+    bottom: 5rem;
   }
   to {
     width: 13rem;
-    bottom: 10rem; /* was @apply bottom-40 */
+    bottom: 10rem;
   }
 }
 @keyframes btn {

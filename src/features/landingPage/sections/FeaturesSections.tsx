@@ -1,8 +1,29 @@
-import React from "react";
+import { useGSAP } from "@gsap/react";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import Image from "next/image";
+import gsap from "gsap";
+import React, { useRef } from "react";
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 const FeaturesSections = () => {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const featuresTextRef = useRef<HTMLDivElement>(null);
+  // feature animation
+  useGSAP(() => {
+    gsap.to(headerRef.current, {
+      scrollTrigger: {
+        trigger: headerRef.current,
+
+        pin: true,
+        scrub: 1,
+        start: "top top",
+        end: "+=500px top",
+        markers: true,
+      },
+    });
+  });
   return (
-    <Section id="features" className="w-full h-screen   relative z-[90]">
+    <Section id="features" className="w-full h-400  relative z-99">
       <header
         ref={headerRef}
         className="w-full   select-none cursor-pointer px-5 pt-10 pb-32  "
@@ -25,3 +46,16 @@ const FeaturesSections = () => {
 };
 
 export default FeaturesSections;
+
+const Section = (props: {
+  id: string;
+  className: string;
+  children?: React.ReactNode;
+}) => {
+  const { id, className, children } = props;
+  return (
+    <div id={id} className={className}>
+      {children}
+    </div>
+  );
+};
