@@ -17,6 +17,7 @@ type Props = {
 };
 
 const NETWORK_IDS: Record<string, number> = {
+  sepolia: 11155111,
   base: 8453, // Base mainnet
   ethereum: 1, // Ethereum mainnet
   polygon: 137, // Polygon mainnet
@@ -25,7 +26,6 @@ const NETWORK_IDS: Record<string, number> = {
   bsc: 56, // BNB Smart Chain
   berachain: 80084, // (contoh ID, cek yg benar)
   avalanche: 43114, // Avalanche C-Chain mainnet
-  sepolia: 11155111,
 };
 function SwitchChain({ value, onChange }: Props) {
   const { caipNetwork } = useAppKitNetwork();
@@ -38,7 +38,7 @@ function SwitchChain({ value, onChange }: Props) {
         switchChain({ chainId: id });
       }
     }
-  }, [value, switchChain, caipNetwork]);
+  }, [value, caipNetwork]);
 
   return (
     <div className="space-y-2">
@@ -54,6 +54,12 @@ function SwitchChain({ value, onChange }: Props) {
           </div>
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="sepolia">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              sepolia
+            </div>
+          </SelectItem>
           <SelectItem value="base">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -100,12 +106,6 @@ function SwitchChain({ value, onChange }: Props) {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-red-500 rounded-full"></div>
               Avalanche
-            </div>
-          </SelectItem>
-          <SelectItem value="sepolia">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              sepolia
             </div>
           </SelectItem>
         </SelectContent>

@@ -1,41 +1,11 @@
 import Groq from "groq-sdk";
 import { NextResponse, NextRequest } from "next/server";
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-export async function GET() {
-  const chatCompletion = await getGroqChatCompletion();
-  const messages = [];
-  messages.push(chatCompletion.choices[0]?.message);
-  return NextResponse.json({
-    messages: messages,
-  });
-}
+export const dynamic = 'force-dynamic';
 
-export async function POST(req: Request) {
-  const { messages } = await req.json();
+const getGroqClient = () => new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-  const chatCompletion = await groqChat(messages);
-  // Print the completion returned by the LLM.
-  messages.push(chatCompletion.choices[0]?.message);
-  return NextResponse.json({
-    data: messages,
-    message: chatCompletion.choices[0]?.message.content || "",
-  });
-}
-
-function groqChat(messages: any) {
-  return groq.chat.completions.create({
-    messages: messages,
-    model: "openai/gpt-oss-20b",
-  });
-}
-
-function getGroqChatCompletion() {
-  return groq.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: `
+const SYSTEM_PROMPT = `
 You are a beautiful assistant for my project called **Achan Market**. 
 Achan Market is an NFT marketplace that supports multi-chain trading: users can buy, sell, or mint NFTs on any chain with just one payment. No need to switch networks.
 
@@ -71,31 +41,50 @@ Achan Market is an NFT marketplace that supports multi-chain trading: users can 
   - Statistics (buy, sell, view, bookmark/favorite)
 
 - Settings: /setting
-`,
-      },
-    ],
-    model: "openai/gpt-oss-20b",
+`;
+
+export async function GET() {
+  const chatCompletion = await getGroqChatCompletion();
+  const messages = [];
+  messages.push(chatCompletion.choices[0]?.message);
+  return NextResponse.json({
+    messages: messages,
   });
 }
 
-// export async function GET(request: Request) {
-//   const chatCompletion = await getGroqChatCompletion();
-//   // Print the completion returned by the LLM.
-//   console.log(chatCompletion.created || "");
-//   console.log(chatCompletion.id || "");
-//   console.log(chatCompletion.model || "");
-//   console.log(chatCompletion.system_fingerprint || "");
-//   console.log(chatCompletion.usage?.prompt_tokens || "");
-//   console.log(chatCompletion.choices[0].index || "");
-//   console.log(chatCompletion.choices.length || "");
-//   return NextResponse.json({
-//     created: chatCompletion.created || "",
-//     id: chatCompletion.id || "",
-//     model: chatCompletion.model || "",
-//     system_fingerprint: chatCompletion.system_fingerprint || "",
-//     prompt_tokens: chatCompletion.usage?.prompt_tokens || "",
-//     index: chatCompletion.choices[0].index || "",
-//     length: chatCompletion.choices.length || "",
-//     message: chatCompletion.choices[0]?.message.role || "",
-//   });
-// }
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  // Prepend system prompt to maintain persona
+  const messagesWithSystem = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...messages
+  ];
+
+  const chatCompletion = await groqChat(messagesWithSystem);
+  // Print the completion returned by the LLM.
+  messages.push(chatCompletion.choices[0]?.message);
+  return NextResponse.json({
+    data: messages,
+    message: chatCompletion.choices[0]?.message.content || "",
+  });
+}
+
+function groqChat(messages: any) {
+  return getGroqClient().chat.completions.create({
+    messages: messages,
+    model: "llama3-8b-8192",
+  });
+}
+
+function getGroqChatCompletion() {
+  return getGroqClient().chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+      },
+    ],
+    model: "llama3-8b-8192",
+  });
+}

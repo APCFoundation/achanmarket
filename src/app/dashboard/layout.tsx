@@ -12,7 +12,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <section>
+    <section className={""}>
       <Navbar />
       {children}
     </section>
