@@ -189,11 +189,11 @@
 @keyframes btn-width {
   from {
     width: 8rem;
-    bottom: 5rem; /* was @apply bottom-20 */
+    bottom: 5rem;
   }
   to {
     width: 13rem;
-    bottom: 10rem; /* was @apply bottom-40 */
+    bottom: 10rem;
   }
 }
 @keyframes btn {
@@ -288,6 +288,7 @@
   --chart-5: 27 87% 67%;
   --radius: 0.5rem;
   --font-display: "Press_Start_2P", system-ui;
+  --color-white-custom: #f3fcf0;
 }
 
 .dark {

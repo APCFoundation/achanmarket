@@ -1,3 +1,18 @@
+export interface ApiReponse<T> {
+  status: string;
+  message: string;
+  data: T;
+}
+
+export type MetadataCID = {
+  metadataCID: string;
+};
+
+export interface ApiReponseError {
+  status: string;
+  message: string;
+}
+
 export interface NftData {
   contract: {
     address: string;
@@ -70,4 +85,47 @@ export interface NftData {
     blockTimestamp: string | null;
     blockNumber: number | null;
   };
+}
+
+export interface Yapper {
+  user_id: string;
+  twitter: {
+    username: string;
+    name: string;
+    url: string;
+    imageUrl: string;
+  };
+  yaps: {
+    yaps_all: number;
+    yaps_l24h: number;
+    yaps_l48h: number;
+    yaps_l7d: number;
+    yaps_l30d: number;
+    yaps_l3m: number;
+    yaps_l6m: number;
+    yaps_l12m: number;
+  };
+}
+
+type ChartPoint = {
+  time: string;
+  yaps: number;
+};
+
+export interface YapperWithChart extends Yapper {
+  chartData: ChartPoint[];
+}
+
+export interface UploadPinataResponse {
+  id: string;
+  name: string;
+  cid: string;
+  size: number;
+  created_at: string;
+  number_of_files: number;
+  mime_type: string;
+  group_id: string | null;
+  keyvalues: Record<string, string>;
+  vectorized: boolean;
+  network: string;
 }

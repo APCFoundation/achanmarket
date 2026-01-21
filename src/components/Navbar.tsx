@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useSignMessage } from "wagmi";
 import useHydrate from "@/hook/useHydrate";
-import { shortenAddress } from "@/lib/shortenAddress";
+import { shortenAddress } from "@/utils/shortenAddress";
 import { useAppKit } from "@reown/appkit/react";
 export default function Navbar() {
   const { address, isConnected } = useAccount({});
@@ -25,9 +25,9 @@ export default function Navbar() {
           <span>A-chan Market</span>
         </Link>
         <div className="flex items-center gap-5 ">
-          <Link href={`/trade`}>Trade</Link>
-          <Link href={`/mint`}>Mint</Link>
-          <Link href={`/create`}>Create</Link>
+          <Link href={`/dashboard/trade`}>Trade</Link>
+          <Link href={`/dashboard/mint`}>Mint</Link>
+          <Link href={`/dashboard/create`}>Create</Link>
         </div>
       </div>
       <div>
