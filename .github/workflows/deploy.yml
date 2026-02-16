@@ -1,10 +1,9 @@
-name: Deploy AchanMarket
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
@@ -49,18 +48,9 @@ jobs:
     needs: quality
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
-    strategy:
-      matrix:
-        include:
-          - environment: staging
-            branch: develop
-          - environment: production
-            branch: main
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ matrix.branch }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -84,65 +74,9 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.environment }}
+          name: build
           path: |
             .next/
             package.json
             pnpm-lock.yaml
           retention-days: 7
-
-  deploy:
-    name: Deploy to ${{ matrix.environment }}
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
-    strategy:
-      matrix:
-        include:
-          - environment: staging
-            branch: develop
-            ec2_host: ${{ secrets.EC2_STAGING_HOST }}
-          - environment: production
-            branch: main
-            ec2_host: ${{ secrets.EC2_HOST }}
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-${{ matrix.environment }}
-          path: /tmp/build
-
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ matrix.ec2_host }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          timeout: 120s
-          script: |
-            cd /var/www/achanmarket
-            
-            # Backup current build
-            if [ -d ".next" ]; then
-              cp -r .next .next.backup
-            fi
-            
-            # Deploy new build
-            rm -rf .next
-            cp -r /tmp/build/.next .
-            cp /tmp/build/package.json .
-            cp /tmp/build/pnpm-lock.yaml .
-            
-            # Install production dependencies only
-            pnpm install --frozen-lockfile --prod=false
-            
-            # Build the application
-            pnpm build
-            
-            # Restart PM2
-            pm2 restart achanmarket || pm2 start npm --name achanmarket -- start
-            
-            # Cleanup old backup if successful
-            rm -rf .next.backup
-            
-            echo "Deployment completed successfully"
