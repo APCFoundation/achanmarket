@@ -6,11 +6,16 @@ import { abiNFTMarketplaceFactory } from "@/abi.js";
 import { toast } from "sonner";
 import { FormState } from "../types";
 import hashObject from "@/utils/hashObject";
+import { ApiReponse, MetadataCID } from "@/lib/type";
+
 export const useNFTCreation = ({
   contractAddress,
+  addressUser,
 }: {
   contractAddress: Address;
+  addressUser: Address;
 }) => {
+  if (!addressUser) return;
   const { writeContractAsync } = useWriteContract({ config });
   const [uploading, setUploading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -18,6 +23,18 @@ export const useNFTCreation = ({
   const [previousMetadataHash, setPreviousMetadataHash] = useState<
     string | null
   >();
+
+  // async function createPinataGroupByAddress(address: Address) {
+
+  //   const res = await fetch("/api/contracts/createPinataGroup", {
+  //     method: 'POST',
+  //     body: JSON.stringify({address})
+  //   })
+  //   if (!res.ok) {
+  //      throw new Error("Failed to create Pinata group");
+  //   }
+  //   return res.json();
+  // }
   async function createCollection(
     form: FormState,
     callback: (e: string) => void
@@ -54,13 +71,14 @@ export const useNFTCreation = ({
       });
       // Check if metadata or images changed
       const metadataChanged = currentMetadataHash !== previousMetadataHash;
+
       if (!metadata) {
         const res = await fetch("/api/contracts/create", {
           method: "POST",
           body: formData,
         });
 
-        const result = await res.json();
+        const result: ApiReponse<MetadataCID> = await res.json();
         if (!res.ok || !result?.data?.metadataCID) {
           throw new Error(result?.message || "Upload failed");
         }

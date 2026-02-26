@@ -1,137 +1,70 @@
 import { NextResponse } from "next/server";
-import { pinata } from "@/lib/config/pinataConfig";
-type UploadPinataResponse = {
-  id: string;
-  name: string;
-  cid: string;
-  size: number;
-  created_at: string;
-  number_of_files: number;
-  mime_type: string;
-  group_id: string | null;
-  keyvalues: Record<string, string>;
-  vectorized: boolean;
-  network: string;
-};
+import { ContractService } from "@/services/contract-service";
+import { ResponseError } from "@/lib/exception/ResponseError";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_IMAGE_TYPES = [
-  "image/png",
-  "image/jpeg",
-  "image/jpg",
-  "image/gif",
-];
+const rateLimitStore = new Map(); // key: IP, value: { count, timestamp }
 
-function removeSpaceAndUppercase(str = "") {
-  return String(str)
-    .replace(/\s+/g, "")
-    .toUpperCase()
-    .replace(/[^A-Z0-9-_]/g, "");
-}
-
-function badRequest(msg: string) {
-  return NextResponse.json({ status: "error", message: msg }, { status: 400 });
-}
+const WINDOW = 60 * 10000; // 1 minute
+const LIMIT = 5; // 10 requests per minute
 
 export async function POST(req: Request) {
-  const formData = await req.formData();
   try {
-    // Basic required text fields
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+
+    const now = Date.now();
+    const record = rateLimitStore.get(ip) || { count: 0, timestamp: now };
+
+    // Reset window
+    if (now - record.timestamp > WINDOW) {
+      record.count = 0;
+      record.timestamp = now;
+    }
+
+    record.count++;
+    rateLimitStore.set(ip, record);
+
+    if (record.count > LIMIT) {
+      return new Response("Rate limit exceeded", { status: 429 });
+    }
+    const formData = await req.formData();
     const name = String(formData.get("name") ?? "").trim();
     const symbol = String(formData.get("symbol") ?? "").trim();
     const description = String(formData.get("description") ?? "").trim();
-    // Validate required fields
-    if (!name) return badRequest("Missing required field: name");
-    if (!symbol) return badRequest("Missing required field: symbol");
 
-    // Files
-    const collectionFileRaw = formData.get("collectionFile");
     const artworkFileRaw = formData.get("artworkFile");
-    const collectionFile =
-      collectionFileRaw instanceof File ? collectionFileRaw : null;
     const artworkFile = artworkFileRaw instanceof File ? artworkFileRaw : null;
+    const mockArtworkFile = new File(["hi"], "message.png", {
+      type: "image/png",
+    });
 
-    if (!artworkFile) return badRequest("No artwork file provided");
-
-    // File validations
-    if (artworkFile.size > MAX_FILE_SIZE) {
-      return badRequest("Artwork file size must be less than 10 MB");
-    }
-    if (!ALLOWED_IMAGE_TYPES.includes(artworkFile.type)) {
-      return badRequest("Unsupported artwork file type");
-    }
-    // Prepare metadata
-    const metadata = {
+    const result = await ContractService.create({
       name,
+      symbol,
       description,
-      image: "",
-      attributes: [{ trait_type: "Art Type" }],
-    };
+      artworkFile: mockArtworkFile,
+    });
 
-    // Sanitize folder/name
-    const baseName = removeSpaceAndUppercase(name || "NFT");
-
-    // Upload artwork -> metadata
-    try {
-      const renamedArtwork = new File([artworkFile], "0.png", {
-        type: artworkFile.type,
-      });
-      const NAME_FOLDER_IMAGE = `${baseName}-IMAGE`;
-
-      const imageResult: UploadPinataResponse = await pinata.upload.public
-        .fileArray([renamedArtwork])
-        .name(NAME_FOLDER_IMAGE);
-
-      if (!imageResult || !imageResult.cid) {
-        return NextResponse.json(
-          { status: "error", message: "Failed to upload image to Pinata" },
-          { status: 500 }
-        );
-      }
-
-      const METADATA_FOLDER_IMAGE = `${baseName}-METADATA`;
-      const metadataJson = JSON.stringify(
-        { ...metadata, image: `ipfs://${imageResult.cid}` },
-        null,
-        2
-      );
-      const metadataFile = new File([metadataJson], "0.json", {
-        type: "application/json",
-      });
-
-      const metaResult: UploadPinataResponse = await pinata.upload.public
-        .fileArray([metadataFile])
-        .name(METADATA_FOLDER_IMAGE);
-
-      if (!metaResult || !metaResult.cid) {
-        return NextResponse.json(
-          { status: "error", message: "Failed to upload metadata to Pinata" },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json(
-        {
-          status: "success",
-          message: "NFT uploaded to Pinata",
-          data: {
-            metadataCID: `ipfs://${metaResult.cid}`,
-          },
-        },
-        { status: 200 }
-      );
-    } catch (uploadErr: any) {
-      console.error("Pinata upload error:", uploadErr);
-      return NextResponse.json(
-        { status: "error", message: "Failed to upload to Pinata" },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "NFT uploaded to Pinata",
+        data: result,
+      },
+      { status: 200 },
+    );
   } catch (err: any) {
     console.error("Upload error:", err);
+
+    if (err instanceof ResponseError) {
+      return NextResponse.json(
+        { status: "error", message: err.message },
+        { status: err.status },
+      );
+    }
+
     return NextResponse.json(
       { status: "error", message: err?.message ?? "Unknown error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

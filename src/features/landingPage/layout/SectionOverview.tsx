@@ -1,7 +1,7 @@
 import React from "react";
 import Backed from "../components/backed";
-import { featureSection } from "@/app/a";
 import Image from "next/image";
+import { featureSection } from "../a";
 
 const SectionOverview = () => {
   return (

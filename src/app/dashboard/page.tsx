@@ -2,7 +2,7 @@
 
 import TrendingNFTCarousel from "@/features/dashboard/components/TrendingNFT";
 import TrendingYappers from "@/features/dashboard/components/TrendingYappers";
-import TopSection from "@/features/top-sections";
+import TopSection from "@/features/top-sections/TopSections";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
@@ -66,7 +66,7 @@ export default function Page() {
         )}
         <div
           ref={topSectionRef}
-          className={`sticky top-16 bg-red-300 border  overflow-y-auto border-black rounded-2xl w-1/4 h-132 overflow-hidden shadow-[10px_10px_0px_0_rgba(0,0,0,1)] custom-scroll-top-sections  `}
+          className={`sticky top-16 bg-white-custom  border  overflow-y-auto border-black rounded-2xl w-1/4 h-132 overflow-hidden shadow-[10px_10px_0px_0_rgba(0,0,0,1)] custom-scroll-top-sections  `}
         >
           <TopSection
             isCollapsed={isCollapsed}

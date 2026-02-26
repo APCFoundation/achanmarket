@@ -11,7 +11,7 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 
-import { collections } from "./api";
+import { mockCollections } from "@/lib/mockCollections";
 import { useEffect, useState } from "react";
 
 const TrendingNFTCarousel = () => {
@@ -36,7 +36,7 @@ const TrendingNFTCarousel = () => {
       className="relative bg-purple-200 w-full h-100 border-2 border-black rounded-2xl shadow-[10px_10px_0px_0_rgba(0,0,0,1)] overflow-hidden group"
     >
       <CarouselContent>
-        {collections.map((item, i) => (
+        {mockCollections.map((item, i) => (
           <CarouselItem key={i} className="relative h-100 bg-red-500">
             <Image
               src={item.imageCollection}
