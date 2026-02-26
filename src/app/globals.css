@@ -348,3 +348,66 @@ body {
 .no-number-arrows::-webkit-inner-spin-button {
   appearance: none;
 }
+
+/* AI stuff */
+/* Tambahkan di bawah konfigurasi tailwind yang sudah ada */
+
+@layer utilities {
+  /* Efek Kaca Magis RPG */
+  .rpg-glass-panel {
+    @apply bg-background/60 backdrop-blur-md border-2 border-primary/50 rounded-xl shadow-[0_0_15px_rgba(var(--primary),0.3)];
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+  }
+
+  /* Teks Retro Game */
+  .font-game {
+    font-family: "Press Start 2P", cursive;
+  }
+
+  /* Bingkai Ornamen */
+  .ornate-border {
+    @apply relative border-2 border-primary;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--primary);
+      background: var(--background);
+    }
+    &::before {
+      top: -5px;
+      left: -5px;
+      border-right: 0;
+      border-bottom: 0;
+    }
+    &::after {
+      bottom: -5px;
+      right: -5px;
+      border-left: 0;
+      border-top: 0;
+    }
+  }
+}
+
+/* Latar belakang game bergerak */
+.animated-bg {
+  background-image: url("/assets/anime-sky-bg.jpg"); /* Ganti dengan gambar latar anime Anda */
+  background-size: cover;
+  background-position: center;
+  animation: subtleMove 60s infinite alternate linear;
+}
+
+@keyframes subtleMove {
+  from {
+    background-position: 40% 50%;
+  }
+  to {
+    background-position: 60% 50%;
+  }
+}

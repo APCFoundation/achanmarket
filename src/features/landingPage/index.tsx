@@ -22,12 +22,13 @@ import Chatbot from "@/features/landingPage/components/chatbot/Chatbot";
 import { featureSection } from "./a";
 import FooterSection from "./sections/FooterSection";
 import FeaturesSections from "./sections/FeaturesSections";
+import GridSection from "./sections/GridSection";
 
 const Character = dynamic(
   () => import("@/features/landingPage/components/Character"),
   {
     ssr: false,
-  }
+  },
 );
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -41,7 +42,7 @@ export default function LandingPage() {
   const { contextSafe } = useGSAP({ scope: menuRef });
   function requestText() {
     let alphabet = Array.from({ length: 26 }, (_, i) =>
-      String.fromCharCode(97 + i)
+      String.fromCharCode(97 + i),
     );
     let textSplit = textScroll.split("");
     let count = 0;
@@ -141,7 +142,7 @@ export default function LandingPage() {
 
             scrub: 2,
           },
-        }
+        },
       );
     });
 
@@ -163,7 +164,7 @@ export default function LandingPage() {
 
               scrub: 1,
             },
-          }
+          },
         );
       }
     });
@@ -203,7 +204,7 @@ export default function LandingPage() {
         boxShadow: "0px 4px 24px 0px rgba(0,0,0,0.15)",
         ease: "power2.out",
       },
-      "<"
+      "<",
     );
     tl.to(
       menus,
@@ -212,7 +213,7 @@ export default function LandingPage() {
         textShadow: "0 2px 8px #000",
         ease: "power1.inOut",
       },
-      "<"
+      "<",
     );
   };
 
@@ -239,7 +240,7 @@ export default function LandingPage() {
         boxShadow: "none",
         ease: "power2.inOut",
       },
-      "<"
+      "<",
     );
   };
 
