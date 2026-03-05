@@ -1,0 +1,451 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "kWfXo",
+      "x": 0,
+      "y": 0,
+      "name": "Hero Section - Achan Market",
+      "width": 1440,
+      "height": 900,
+      "fill": "#FFFFFF",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "nFUoB",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "padding": [
+            20,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "sX3JX",
+              "name": "Left Badges",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PC1gG",
+                  "name": "Home Badge",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#EEEEEE",
+                  "cornerRadius": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "e3FpK",
+                      "name": "homeIcon",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#555555"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zNl6r",
+                  "name": "Story Badge",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#EEEEEE",
+                  "cornerRadius": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "2F60Z",
+                      "name": "storyIcon",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#555555"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lYmCt",
+              "name": "Right Badges",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mS5fg",
+                  "name": "PayPal Badge",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#EEEEEE",
+                  "cornerRadius": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "zb2HL",
+                      "name": "payIcon",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#555555"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QoiLa",
+                  "name": "Apple Badge",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#EEEEEE",
+                  "cornerRadius": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "MEOwU",
+                      "name": "appleIcon",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#555555"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bNOcF",
+          "name": "Hero Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "DCXi8",
+              "x": 10,
+              "y": 350,
+              "name": "Menu Column",
+              "width": 40,
+              "height": 120,
+              "layout": "vertical",
+              "gap": 10,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "nSXqE",
+                  "name": "mm1",
+                  "fill": "#000000",
+                  "content": "M",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "mZ2Xl",
+                  "name": "mm2",
+                  "fill": "#000000",
+                  "content": "E",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "sLNqr",
+                  "name": "mm3",
+                  "fill": "#000000",
+                  "content": "N",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "4GBUd",
+                  "name": "mm4",
+                  "fill": "#000000",
+                  "content": "U",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "8eXVz",
+              "x": 500,
+              "y": 20,
+              "name": "Title",
+              "fill": "#000000",
+              "content": "A-chan Market",
+              "fontFamily": "Outfit",
+              "fontSize": 48,
+              "fontWeight": "900",
+              "letterSpacing": -2
+            },
+            {
+              "type": "frame",
+              "id": "p9rmN",
+              "x": 420,
+              "y": 90,
+              "name": "Character Illustration",
+              "width": 520,
+              "height": 520,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1772429553768.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 260
+            },
+            {
+              "type": "ellipse",
+              "id": "PXMuK",
+              "x": 360,
+              "y": 50,
+              "name": "Outer Circle",
+              "fill": "transparent",
+              "width": 640,
+              "height": 640
+            },
+            {
+              "type": "ellipse",
+              "id": "ZYw8p",
+              "x": 470,
+              "y": 160,
+              "name": "Inner Circle",
+              "fill": "transparent",
+              "width": 420,
+              "height": 420
+            },
+            {
+              "type": "ellipse",
+              "id": "bulkt",
+              "x": 1020,
+              "y": 180,
+              "name": "Circle R1",
+              "fill": "#F0F0F0",
+              "width": 50,
+              "height": 50
+            },
+            {
+              "type": "ellipse",
+              "id": "lE4Fi",
+              "x": 1060,
+              "y": 420,
+              "name": "Circle R2",
+              "fill": "#F0F0F0",
+              "width": 40,
+              "height": 40
+            },
+            {
+              "type": "ellipse",
+              "id": "6BT6V",
+              "x": 320,
+              "y": 160,
+              "name": "Circle L1",
+              "fill": "#F0F0F0",
+              "width": 55,
+              "height": 55
+            },
+            {
+              "type": "ellipse",
+              "id": "48UvY",
+              "x": 360,
+              "y": 480,
+              "name": "Circle L2",
+              "fill": "#F0F0F0",
+              "width": 35,
+              "height": 35
+            },
+            {
+              "type": "frame",
+              "id": "pm7db",
+              "x": 600,
+              "y": 640,
+              "name": "Discover Button",
+              "fill": "#A3E635",
+              "cornerRadius": 999,
+              "gap": 12,
+              "padding": [
+                16,
+                32
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "aO3C1",
+                  "name": "dText",
+                  "fill": "#000000",
+                  "content": "Discover",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "KeHrF",
+                  "name": "dArrow",
+                  "fill": "#000000",
+                  "content": "→",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "P5AdW",
+              "x": -20,
+              "y": 360,
+              "name": "Bottom Character",
+              "width": 400,
+              "height": 400,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1772429594165.png",
+                "mode": "fill"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "0zapu",
+              "x": 460,
+              "y": 710,
+              "name": "Navigation Bar",
+              "height": 50,
+              "fill": "#FFFFFF",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "6nVyY",
+                  "name": "nav1",
+                  "fill": "#000000",
+                  "content": "App",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "frame",
+                  "id": "JrTMO",
+                  "name": "navD",
+                  "width": 1,
+                  "height": 20,
+                  "fill": "#E0E0E0"
+                },
+                {
+                  "type": "text",
+                  "id": "55AqG",
+                  "name": "nav2",
+                  "fill": "#000000",
+                  "content": "Guide Book",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "frame",
+                  "id": "QxYeh",
+                  "name": "navD2",
+                  "width": 1,
+                  "height": 20,
+                  "fill": "#E0E0E0"
+                },
+                {
+                  "type": "text",
+                  "id": "cCDit",
+                  "name": "nav3",
+                  "fill": "#000000",
+                  "content": "Roadmap",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Afxns",
+              "x": 1260,
+              "y": 660,
+              "name": "Decorative Lines",
+              "width": 120,
+              "height": 100,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4XOsH",
+                  "name": "ln1",
+                  "width": 100,
+                  "height": 2,
+                  "fill": "#000000"
+                },
+                {
+                  "type": "frame",
+                  "id": "sPG6A",
+                  "name": "ln2",
+                  "width": 80,
+                  "height": 2,
+                  "fill": "#000000"
+                },
+                {
+                  "type": "frame",
+                  "id": "8lyV7",
+                  "name": "ln3",
+                  "width": 60,
+                  "height": 2,
+                  "fill": "#000000"
+                },
+                {
+                  "type": "frame",
+                  "id": "bm6SR",
+                  "name": "ln4",
+                  "width": 40,
+                  "height": 2,
+                  "fill": "#000000"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

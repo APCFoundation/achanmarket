@@ -2,7 +2,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 const images = ["/char7.png", "/char6.png", "/char5.png", "/char4.png"];
 const position = [
@@ -19,53 +19,74 @@ const sizeImage = [
   "w-[40rem]",
 ];
 
-const Character2 = () => {
-  const [imgIndex, setImgIndex] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const Character = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    const chars = gsap.utils.toArray<HTMLImageElement>(".character");
+  useGSAP(
+    () => {
+      const chars = gsap.utils.toArray<HTMLElement>(".character");
+      if (chars.length === 0) return;
 
-    // Set kondisi awal: semua hidden kecuali yang pertama
-    gsap.set(chars, { opacity: 0, x: -200 });
-    gsap.set(chars[0], { opacity: 1, x: 0 });
-    if (intervalRef.current) clearInterval(intervalRef.current);
+      // Set kondisi awal: semua hidden kecuali yang pertama
+      gsap.set(chars, { opacity: 0, x: -200 });
+      gsap.set(chars[0], { opacity: 1, x: 0 });
 
-    intervalRef.current = setInterval(() => {
-      const nextIndex = (imgIndex + 1) % chars.length;
-
-      // animasi keluar ke kanan
-      gsap.to(chars[imgIndex], {
-        x: 200,
-        opacity: 0,
-        duration: 0.5,
-        onComplete: () => {
-          // langsung balikin ke kiri biar siap animasi masuk lagi nanti
-          gsap.set(chars[imgIndex], { x: -200, opacity: 0 });
-        },
+      // Animasi intro: scale dari kecil
+      gsap.from(chars[0], {
+        width: "30rem",
+        duration: 1,
+        delay: 1,
       });
 
-      // animasi masuk dari kiri
-      gsap.to(chars[nextIndex], {
-        x: 0,
-        opacity: 1,
-        duration: 0.5,
-      });
+      // Pakai variabel biasa, BUKAN React state — menghindari re-render & stale closure
+      let currentIndex = 0;
 
-      setImgIndex(nextIndex);
-    }, 5000);
+      const swap = () => {
+        const nextIndex = (currentIndex + 1) % chars.length;
 
-    return () => intervalRef.current && clearInterval(intervalRef.current);
-  }, [imgIndex]);
+        // Animasi keluar ke kanan
+        gsap.to(chars[currentIndex], {
+          x: 200,
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            // Reset posisi ke kiri, siap untuk animasi masuk nanti
+            gsap.set(chars[currentIndex], { x: -200, opacity: 0 });
+            currentIndex = nextIndex;
+          },
+        });
 
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+        // Animasi masuk dari kiri
+        gsap.to(chars[nextIndex], {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+        });
+      };
+
+      // Mulai interval setelah animasi intro selesai (1s delay + 1s duration = 2s)
+      const startTimeout = setTimeout(() => {
+        const interval = setInterval(swap, 5000);
+        // Simpan interval ID untuk cleanup
+        (containerRef.current as any)?.__intervalId &&
+          clearInterval((containerRef.current as any).__intervalId);
+        if (containerRef.current) {
+          (containerRef.current as any).__intervalId = interval;
+        }
+      }, 2000);
+
+      return () => {
+        clearTimeout(startTimeout);
+        if (containerRef.current) {
+          clearInterval((containerRef.current as any).__intervalId);
+        }
+      };
+    },
+    { scope: containerRef },
+  );
 
   return (
-    <div className="size-[40rem] absolute">
+    <div ref={containerRef} className="size-[40rem] absolute">
       {images.map((image, index) => (
         <Image
           key={index}
@@ -80,64 +101,5 @@ const Character2 = () => {
   );
 };
 
-const Character = () => {
-  const [imgIndex, setImgIndex] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const charRef = useRef<HTMLImageElement>(null);
-
-  useGSAP(() => {
-    gsap.from(charRef.current, {
-      width: "30rem",
-      duration: 1,
-      delay: 1,
-      onComplete: () => {
-        // mulai interval
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        // animasi bergeser ke kanan dan hilang
-        intervalRef.current = setInterval(() => {
-          gsap.to(charRef.current, {
-            x: 200,
-            duration: 0.5,
-            opacity: 0,
-            onComplete: () => {
-              setImgIndex((prev) => (prev + 1) % images.length);
-              gsap.set(charRef.current, {
-                x: -200,
-              });
-              gsap.to(charRef.current, {
-                x: 0,
-                opacity: 1,
-                duration: 0.5,
-              });
-            },
-          });
-        }, 5000);
-      },
-    });
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Bersihkan interval saat unmount
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  return (
-    <div className={"size-[40rem]  absolute"}>
-      <Image
-        alt=""
-        ref={charRef}
-        src={images[imgIndex]}
-        width={400}
-        height={400}
-        className={`${position[imgIndex]} absolute ${sizeImage[imgIndex]} select-none pointer-events-none`}
-      />
-    </div>
-  );
-};
-
 export default Character;
+
