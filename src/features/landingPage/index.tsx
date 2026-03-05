@@ -278,7 +278,7 @@ export default function LandingPage() {
         <Badge />
         <HeaderText className="absolute font-press text-[3vw] xl:top-3 top-4 sm:translate-x-[-3rem]   xl:scale-100 lg:scale-90 scale-50  ravo " />
         <Background className="animation-behind animation absolute" />
-        {/* <Character /> */}
+        <Character />
         {/* <div className={"size-[40rem] absolute"}>
           <Image
             alt="testing"
